@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `registrations`;
 DROP TABLE IF EXISTS `activities`;
 DROP TABLE IF EXISTS `activity_types`;
 DROP TABLE IF EXISTS `administrators`;
+DROP TABLE IF EXISTS 'system_logs'
 
 -- 1. 管理员表
 CREATE TABLE `administrators` (
