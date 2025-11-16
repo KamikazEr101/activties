@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xidian.activities.mapper.ActivityTypeMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.xidian.activities.entity.ActivityType">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+        <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+        <result column="sort_order" property="sortOrder" jdbcType="INTEGER" />
+        <result column="is_enabled" property="isEnabled" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List"> id, type_name, type_code, sort_order, is_enabled, create_time,
+        update_time </sql>
+
+    <!-- 插入活动类型 -->
+    <insert id="insert" parameterType="com.xidian.activities.entity.ActivityType"
+        useGeneratedKeys="true" keyProperty="id"> INSERT INTO activity_types ( type_name, type_code,
+        sort_order, is_enabled, create_time, update_time ) VALUES ( #{typeName}, #{typeCode},
+        #{sortOrder}, #{isEnabled}, #{createTime}, #{updateTime} ) </insert>
+
+    <!-- 更新活动类型 -->
+    <update id="updateById" parameterType="com.xidian.activities.entity.ActivityType"> UPDATE
+        activity_types <set>
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="typeCode != null">type_code
+        = #{typeCode},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if
+                test="isEnabled != null">is_enabled = #{isEnabled},</if> update_time = NOW() </set>
+        WHERE id = #{id} </update>
+
+    <!-- 根据ID查询活动类型 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap"> SELECT <include
+            refid="Base_Column_List" /> FROM activity_types WHERE id = #{id} AND is_enabled = 1 </select>
+
+    <!-- 分页查询活动类型 -->
+    <select id="selectList" parameterType="com.xidian.activities.entity.ActivityType"
+        resultMap="BaseResultMap"> SELECT <include refid="Base_Column_List" /> FROM activity_types
+        WHERE is_enabled = 1 <if test="typeName != null and typeName != ''"> AND type_name LIKE
+        CONCAT('%', #{typeName}, '%') </if>
+        <if test="typeCode != null and typeCode != ''"> AND
+        type_code = #{typeCode} </if> ORDER BY sort_order ASC, create_time ASC </select>
+
+    <!-- 查询所有活动类型（按排序顺序排序） -->
+    <select id="selectAll" resultMap="BaseResultMap"> SELECT <include refid="Base_Column_List" />
+        FROM activity_types WHERE is_enabled = 1 ORDER BY sort_order ASC, create_time ASC </select>
+
+    <!-- 检查类型名称是否存在 -->
+    <select id="checkTypeNameExists" resultType="java.lang.Integer"> SELECT COUNT(*) FROM
+        activity_types WHERE type_name = #{typeName} <if test="excludeId != null"> AND id !=
+        #{excludeId} </if>
+    </select>
+
+    <!-- 检查类型编码是否存在 -->
+    <select id="checkTypeCodeExists" resultType="java.lang.Integer"> SELECT COUNT(*) FROM
+        activity_types WHERE type_code = #{typeCode} <if test="excludeId != null"> AND id !=
+        #{excludeId} </if>
+    </select>
+
+    <!-- 根据类型编码查询 -->
+    <select id="selectByTypeCode" parameterType="java.lang.String" resultMap="BaseResultMap"> SELECT <include
+            refid="Base_Column_List" /> FROM activity_types WHERE type_code = #{typeCode} AND
+        is_enabled = 1 </select>
+
+    <!-- 检查活动类型是否被使用 -->
+    <select id="checkIsUsedByActivities" resultType="java.lang.Integer"> SELECT COUNT(*) FROM
+        activities WHERE activity_type = ( SELECT type_code FROM activity_types WHERE id = #{typeId}
+        ) AND is_deleted = 0 </select>
+
+</mapper>

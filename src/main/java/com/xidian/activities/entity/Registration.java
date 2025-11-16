@@ -1,20 +1,25 @@
-package com.xidian.activities.pojo;
+package com.xidian.activities.entity;
 
 import lombok.Data;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 /**
- * 报名记录表 (registrations)
+ * 报名记录实体类 (registrations)
+ *
+ * @author
+ * @since
  */
 @Data
 public class Registration {
+
     /**
-     * 报名ID，主键
+     * 报名记录ID，主键
      */
     private Long id;
 
     /**
-     * 活动ID (关联activities.id)
+     * 活动ID
      */
     private Long activityId;
 
@@ -29,12 +34,12 @@ public class Registration {
     private String studentPhone;
 
     /**
-     * 学生学院
+     * 学院
      */
     private String studentCollege;
 
     /**
-     * 状态：1-报名成功, 2-已取消
+     * 报名状态：1-报名成功, 2-已取消
      */
     private Integer registrationStatus;
 
@@ -46,20 +51,25 @@ public class Registration {
     /**
      * 签到时间
      */
-    private Date checkInTime;
+    private LocalDateTime checkInTime;
 
     /**
-     * 软删除标记
+     * 软删除标记：0-未删除, 1-已删除
      */
     private Integer isDeleted;
 
     /**
-     * 报名时间
+     * 创建时间（报名时间）
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
-     * 记录更新时间
+     * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
+
+    /**
+     * 活动信息（关联查询时使用，非数据库字段）
+     */
+    private Activity activity;
 }

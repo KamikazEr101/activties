@@ -8,13 +8,13 @@ import lombok.Data;
 @Data
 public class Result<T> {
 
-    //返回码
+    // 返回码
     private Integer code;
 
-    //返回消息
+    // 返回消息
     private String message;
 
-    //返回数据
+    // 返回数据
     private T data;
 
     public Result() {
@@ -34,7 +34,6 @@ public class Result<T> {
         return result;
     }
 
-
     public static <T> Result<T> ok(T data) {
         return build(data, ResultCodeEnum.SUCCESS);
     }
@@ -44,7 +43,7 @@ public class Result<T> {
     }
 
     public static <T> Result<T> fail() {
-        return build(null, ResultCodeEnum.FAIL);
+        return build(null, ResultCodeEnum.BAD_REQUEST);
     }
 
     public static <T> Result<T> fail(Integer code, String message) {
@@ -52,5 +51,9 @@ public class Result<T> {
         result.setCode(code);
         result.setMessage(message);
         return result;
+    }
+
+    public static <T> Result<T> fail(ResultCodeEnum resultCodeEnum) {
+        return build(null, resultCodeEnum);
     }
 }

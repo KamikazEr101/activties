@@ -1,0 +1,3991 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "校园活动管理系统 API",
+        "description": "校园活动管理系统接口文档",
+        "contact": {
+            "name": "开发团队",
+            "email": "example@xidian.edu.cn"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Generated server url"
+        }
+    ],
+    "security": [
+        {
+            "Bearer Authentication": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "管理员管理",
+            "description": "管理员登录、信息管理相关接口"
+        },
+        {
+            "name": "H5移动端接口",
+            "description": "移动端H5页面相关接口"
+        },
+        {
+            "name": "活动管理",
+            "description": "活动创建、查询、更新、删除相关接口"
+        },
+        {
+            "name": "报名管理",
+            "description": "学生报名、签到相关接口"
+        },
+        {
+            "name": "公共接口",
+            "description": "无需认证的公开接口"
+        },
+        {
+            "name": "活动类型管理",
+            "description": "活动类型的增删改查接口"
+        },
+        {
+            "name": "文件管理",
+            "description": "文件上传相关接口"
+        }
+    ],
+    "paths": {
+        "/activity/update": {
+            "put": {
+                "tags": [
+                    "活动管理"
+                ],
+                "summary": "更新活动",
+                "description": "更新活动信息",
+                "operationId": "updateActivity",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActivityUpdateDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityDetailVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity/status": {
+            "put": {
+                "tags": [
+                    "活动管理"
+                ],
+                "summary": "更新活动状态",
+                "description": "修改活动状态",
+                "operationId": "updateActivityStatus",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActivityStatusUpdateDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityDetailVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity-types/{typeId}": {
+            "get": {
+                "tags": [
+                    "活动类型管理"
+                ],
+                "summary": "获取活动类型详情",
+                "description": "根据ID获取活动类型详细信息",
+                "operationId": "getActivityTypeDetail",
+                "parameters": [
+                    {
+                        "name": "typeId",
+                        "in": "path",
+                        "description": "活动类型ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityTypeVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "活动类型管理"
+                ],
+                "summary": "修改活动类型",
+                "description": "修改活动类型信息",
+                "operationId": "updateActivityType",
+                "parameters": [
+                    {
+                        "name": "typeId",
+                        "in": "path",
+                        "description": "活动类型ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActivityTypeUpdateDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityTypeVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "活动类型管理"
+                ],
+                "summary": "删除活动类型",
+                "description": "删除活动类型（软删除）",
+                "operationId": "deleteActivityType",
+                "parameters": [
+                    {
+                        "name": "typeId",
+                        "in": "path",
+                        "description": "活动类型ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/register": {
+            "post": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "学生报名",
+                "description": "学生报名参加活动",
+                "operationId": "registerActivity",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultRegistrationVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/checkin": {
+            "post": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "学生签到",
+                "description": "学生签到参加活动",
+                "operationId": "checkIn",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CheckInDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultRegistrationVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/checkin-by-token": {
+            "post": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "扫码签到",
+                "description": "通过扫描二维码获取Token进行签到",
+                "operationId": "checkInByToken",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CheckInByTokenDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultRegistrationVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/cancel/{registrationId}": {
+            "post": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "取消报名",
+                "description": "学生取消已报名的活动",
+                "operationId": "cancelRegistration",
+                "parameters": [
+                    {
+                        "name": "registrationId",
+                        "in": "path",
+                        "description": "报名ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultRegistrationVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/batch-checkin": {
+            "post": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "批量签到",
+                "description": "管理员批量为学生签到",
+                "operationId": "batchCheckIn",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "query",
+                        "description": "活动ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "phoneNumbers",
+                        "in": "query",
+                        "description": "手机号列表",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultBatchCheckInResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/h5/checkin": {
+            "post": {
+                "tags": [
+                    "H5移动端接口"
+                ],
+                "summary": "H5扫码签到",
+                "description": "通过Token和手机号完成签到",
+                "operationId": "checkIn_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CheckInByTokenDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultRegistrationVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/file/upload": {
+            "post": {
+                "tags": [
+                    "文件管理"
+                ],
+                "summary": "上传文件",
+                "description": "上传单个文件到MinIO存储",
+                "operationId": "uploadFile",
+                "parameters": [
+                    {
+                        "name": "purpose",
+                        "in": "query",
+                        "description": "文件用途",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "general"
+                        },
+                        "example": "activity_cover"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "description": "上传的文件",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultFileUploadResultDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/file/upload/batch": {
+            "post": {
+                "tags": [
+                    "文件管理"
+                ],
+                "summary": "批量上传文件",
+                "description": "批量上传多个文件",
+                "operationId": "uploadFiles",
+                "parameters": [
+                    {
+                        "name": "files",
+                        "in": "query",
+                        "description": "上传的文件列表",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "binary"
+                            }
+                        }
+                    },
+                    {
+                        "name": "purpose",
+                        "in": "query",
+                        "description": "文件用途",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "general"
+                        },
+                        "example": "activity_cover"
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultListFileUploadResultDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/file/upload/base64": {
+            "post": {
+                "tags": [
+                    "文件管理"
+                ],
+                "summary": "Base64文件上传",
+                "description": "通过Base64编码上传文件",
+                "operationId": "uploadBase64",
+                "parameters": [
+                    {
+                        "name": "fileName",
+                        "in": "query",
+                        "description": "文件名",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "cover.jpg"
+                    },
+                    {
+                        "name": "purpose",
+                        "in": "query",
+                        "description": "文件用途",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "general"
+                        },
+                        "example": "activity_cover"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "description": "Base64编码的文件数据"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultFileUploadResultDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/logout": {
+            "post": {
+                "tags": [
+                    "管理员管理"
+                ],
+                "summary": "管理员登出",
+                "description": "管理员退出登录",
+                "operationId": "logout",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/login": {
+            "post": {
+                "tags": [
+                    "管理员管理"
+                ],
+                "summary": "管理员登录",
+                "description": "管理员使用用户名密码进行登录",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminLoginDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultAdminLoginVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity/publish/{activityId}": {
+            "post": {
+                "tags": [
+                    "活动管理"
+                ],
+                "summary": "发布活动",
+                "description": "发布活动，状态改为报名中",
+                "operationId": "publishActivity",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "活动ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityDetailVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity/create": {
+            "post": {
+                "tags": [
+                    "活动管理"
+                ],
+                "summary": "创建活动",
+                "description": "管理员创建新的活动",
+                "operationId": "createActivity",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActivityCreateDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityDetailVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity/cancel/{activityId}": {
+            "post": {
+                "tags": [
+                    "活动管理"
+                ],
+                "summary": "取消活动",
+                "description": "取消活动，状态改为已取消",
+                "operationId": "cancelActivity",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "活动ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityDetailVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity-types/create": {
+            "post": {
+                "tags": [
+                    "活动类型管理"
+                ],
+                "summary": "创建活动类型",
+                "description": "管理员创建新的活动类型",
+                "operationId": "createActivityType",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActivityTypeCreateDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityTypeVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity-types/batch-delete": {
+            "post": {
+                "tags": [
+                    "活动类型管理"
+                ],
+                "summary": "批量删除活动类型",
+                "description": "批量删除活动类型",
+                "operationId": "batchDeleteActivityTypes",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "description": "活动类型ID列表",
+                                "items": {
+                                    "type": "integer",
+                                    "format": "int64"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultInteger"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/{registrationId}": {
+            "get": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "获取报名详情",
+                "description": "根据报名ID获取详细信息",
+                "operationId": "getRegistrationDetail",
+                "parameters": [
+                    {
+                        "name": "registrationId",
+                        "in": "path",
+                        "description": "报名ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultRegistrationVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/{activityId}/qrcode": {
+            "get": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "生成签到二维码",
+                "description": "管理员生成活动签到二维码(30分钟有效期)",
+                "operationId": "generateCheckInQRCode",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "活动ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "baseUrl",
+                        "in": "query",
+                        "description": "网站基础URL",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "https://example.com"
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultCheckInQRCodeVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/statistics/{activityId}": {
+            "get": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "获取报名统计",
+                "description": "获取活动的报名统计信息",
+                "operationId": "getRegistrationStatistics",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "活动ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultRegistrationStatisticsVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registration/list": {
+            "get": {
+                "tags": [
+                    "报名管理"
+                ],
+                "summary": "查询报名列表",
+                "description": "分页查询报名列表，支持筛选",
+                "operationId": "getRegistrationList",
+                "parameters": [
+                    {
+                        "name": "queryDTO",
+                        "in": "query",
+                        "description": "查询条件",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/RegistrationQueryDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultPageInfoRegistrationVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/activity-types": {
+            "get": {
+                "tags": [
+                    "公共接口"
+                ],
+                "summary": "获取活动类型",
+                "description": "获取所有启用的活动类型",
+                "operationId": "getActivityTypes",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultListActivityTypeVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/activities": {
+            "get": {
+                "tags": [
+                    "公共接口"
+                ],
+                "summary": "公开活动列表",
+                "description": "获取已发布的活动列表，学生可查看",
+                "operationId": "getPublicActivities",
+                "parameters": [
+                    {
+                        "name": "queryDTO",
+                        "in": "query",
+                        "description": "查询条件",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/ActivityQueryDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultPageInfoActivityListVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/activities/{activityId}": {
+            "get": {
+                "tags": [
+                    "公共接口"
+                ],
+                "summary": "公开活动详情",
+                "description": "获取活动详情信息",
+                "operationId": "getPublicActivityDetail",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "活动ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityDetailVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/h5/config": {
+            "get": {
+                "tags": [
+                    "H5移动端接口"
+                ],
+                "summary": "获取H5配置",
+                "description": "获取H5页面配置信息",
+                "operationId": "getPageConfig",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultPageConfig"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/h5/checkin/validate": {
+            "get": {
+                "tags": [
+                    "H5移动端接口"
+                ],
+                "summary": "验证签到Token",
+                "description": "扫描二维码后验证Token是否有效",
+                "operationId": "validateCheckInToken",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "签到Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultMapStringObject"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/file/url/{fileId}": {
+            "get": {
+                "tags": [
+                    "文件管理"
+                ],
+                "summary": "获取文件访问URL",
+                "description": "根据文件ID获取临时访问链接",
+                "operationId": "getFileUrl",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "文件ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/info": {
+            "get": {
+                "tags": [
+                    "管理员管理"
+                ],
+                "summary": "获取管理员信息",
+                "description": "获取当前登录管理员的详细信息",
+                "operationId": "getCurrentAdminInfo",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultAdminInfoVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity/{activityId}": {
+            "get": {
+                "tags": [
+                    "活动管理"
+                ],
+                "summary": "获取活动详情",
+                "description": "根据活动ID获取详细信息",
+                "operationId": "getActivityDetail",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "活动ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultActivityDetailVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "活动管理"
+                ],
+                "summary": "删除活动",
+                "description": "删除指定活动",
+                "operationId": "deleteActivity",
+                "parameters": [
+                    {
+                        "name": "activityId",
+                        "in": "path",
+                        "description": "活动ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity/list": {
+            "get": {
+                "tags": [
+                    "活动管理"
+                ],
+                "summary": "查询活动列表",
+                "description": "分页查询活动列表，支持筛选和排序",
+                "operationId": "getActivityList",
+                "parameters": [
+                    {
+                        "name": "queryDTO",
+                        "in": "query",
+                        "description": "查询条件",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/ActivityQueryDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultPageInfoActivityListVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity-types/list": {
+            "get": {
+                "tags": [
+                    "活动类型管理"
+                ],
+                "summary": "查询活动类型列表",
+                "description": "分页查询活动类型列表，支持筛选",
+                "operationId": "getActivityTypeList",
+                "parameters": [
+                    {
+                        "name": "queryDTO",
+                        "in": "query",
+                        "description": "查询条件",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/ActivityTypeQueryDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultPageInfoActivityTypeVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity-types/check/type-name": {
+            "get": {
+                "tags": [
+                    "活动类型管理"
+                ],
+                "summary": "检查类型名称是否存在",
+                "description": "检查类型名称是否已存在",
+                "operationId": "checkTypeNameExists",
+                "parameters": [
+                    {
+                        "name": "typeName",
+                        "in": "query",
+                        "description": "类型名称",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "excludeId",
+                        "in": "query",
+                        "description": "排除的类型ID（用于修改时检查）",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activity-types/check/type-code": {
+            "get": {
+                "tags": [
+                    "活动类型管理"
+                ],
+                "summary": "检查类型编码是否存在",
+                "description": "检查类型编码是否已存在",
+                "operationId": "checkTypeCodeExists",
+                "parameters": [
+                    {
+                        "name": "typeCode",
+                        "in": "query",
+                        "description": "类型编码",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "excludeId",
+                        "in": "query",
+                        "description": "排除的类型ID（用于修改时检查）",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultBoolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/file/{fileId}": {
+            "delete": {
+                "tags": [
+                    "文件管理"
+                ],
+                "summary": "删除文件",
+                "description": "删除指定文件",
+                "operationId": "deleteFile",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "文件ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ResultVoid": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object"
+                    }
+                }
+            },
+            "ActivityUpdateDTO": {
+                "required": [
+                    "id"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "activityName": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "活动名称",
+                        "example": "新生计算机基础讲座（更新版）"
+                    },
+                    "activityDescription": {
+                        "maxLength": 2000,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "活动描述",
+                        "example": "由计算机学院主办，面向全校新生的计算机入门讲座，新增了实践环节"
+                    },
+                    "activityType": {
+                        "type": "string",
+                        "description": "活动类型编码",
+                        "example": "ACADEMIC"
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "description": "活动开始时间",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "description": "活动结束时间",
+                        "format": "date-time"
+                    },
+                    "location": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "活动地点",
+                        "example": "学术报告厅A201"
+                    },
+                    "organizer": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "主办方",
+                        "example": "计算机学院"
+                    },
+                    "contactPerson": {
+                        "maxLength": 50,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "负责人姓名",
+                        "example": "王老师"
+                    },
+                    "contactPhone": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "联系电话",
+                        "example": "13812345678"
+                    },
+                    "maxParticipants": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "最大参与人数，null表示不限制",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "posterUrl": {
+                        "type": "string",
+                        "description": "活动海报URL",
+                        "example": "https://example.com/poster.jpg"
+                    }
+                },
+                "description": "活动更新信息"
+            },
+            "ActivityDetailVO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "activityName": {
+                        "type": "string",
+                        "description": "活动名称",
+                        "example": "新生计算机基础讲座"
+                    },
+                    "activityDescription": {
+                        "type": "string",
+                        "description": "活动描述",
+                        "example": "由计算机学院主办，面向全校新生的计算机入门讲座"
+                    },
+                    "activityType": {
+                        "type": "string",
+                        "description": "活动类型编码",
+                        "example": "ACADEMIC"
+                    },
+                    "activityTypeName": {
+                        "type": "string",
+                        "description": "活动类型名称",
+                        "example": "学术讲座"
+                    },
+                    "activityStatus": {
+                        "type": "integer",
+                        "description": "活动状态：0-未发布,1-报名中,2-报名结束,3-进行中,4-已结束,5-已取消",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "activityStatusName": {
+                        "type": "string",
+                        "description": "活动状态名称",
+                        "example": "报名中"
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "description": "活动开始时间",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "description": "活动结束时间",
+                        "format": "date-time"
+                    },
+                    "location": {
+                        "type": "string",
+                        "description": "活动地点",
+                        "example": "学术报告厅A201"
+                    },
+                    "organizer": {
+                        "type": "string",
+                        "description": "主办方",
+                        "example": "计算机学院"
+                    },
+                    "contactPerson": {
+                        "type": "string",
+                        "description": "负责人姓名",
+                        "example": "王老师"
+                    },
+                    "contactPhone": {
+                        "type": "string",
+                        "description": "联系电话",
+                        "example": "13812345678"
+                    },
+                    "posterUrl": {
+                        "type": "string",
+                        "description": "活动海报URL",
+                        "example": "https://example.com/poster.jpg"
+                    },
+                    "maxParticipants": {
+                        "type": "integer",
+                        "description": "最大参与人数，null表示不限制",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "currentRegistrationCount": {
+                        "type": "integer",
+                        "description": "当前报名人数",
+                        "format": "int32",
+                        "example": 150
+                    },
+                    "registrationStartTime": {
+                        "type": "string",
+                        "description": "报名开始时间",
+                        "format": "date-time"
+                    },
+                    "registrationEndTime": {
+                        "type": "string",
+                        "description": "报名截止时间",
+                        "format": "date-time"
+                    },
+                    "creatorId": {
+                        "type": "integer",
+                        "description": "创建者ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "creatorName": {
+                        "type": "string",
+                        "description": "创建者姓名",
+                        "example": "管理员"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "description": "更新时间",
+                        "format": "date-time"
+                    },
+                    "canRegister": {
+                        "type": "boolean",
+                        "description": "是否可以报名",
+                        "example": true
+                    },
+                    "canCancel": {
+                        "type": "boolean",
+                        "description": "是否可以取消",
+                        "example": true
+                    },
+                    "remainingSlots": {
+                        "type": "integer",
+                        "description": "剩余名额，null表示不限制",
+                        "format": "int32",
+                        "example": 50
+                    }
+                },
+                "description": "活动详情"
+            },
+            "ResultActivityDetailVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ActivityDetailVO"
+                    }
+                }
+            },
+            "ActivityStatusUpdateDTO": {
+                "required": [
+                    "activityId",
+                    "activityStatus"
+                ],
+                "type": "object",
+                "properties": {
+                    "activityId": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "activityStatus": {
+                        "maximum": 5,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "活动状态：0-未发布,1-报名中,2-报名结束,3-进行中,4-已结束,5-已取消",
+                        "format": "int32",
+                        "example": 1
+                    }
+                },
+                "description": "活动状态更新信息"
+            },
+            "ActivityTypeUpdateDTO": {
+                "required": [
+                    "typeCode",
+                    "typeName"
+                ],
+                "type": "object",
+                "properties": {
+                    "typeName": {
+                        "maxLength": 50,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "类型名称",
+                        "example": "学术讲座"
+                    },
+                    "typeCode": {
+                        "pattern": "^[A-Z_]{2,20}$",
+                        "type": "string",
+                        "description": "类型编码",
+                        "example": "ACADEMIC_LECTURE"
+                    },
+                    "sortOrder": {
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "排序顺序，数字越小越靠前",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "isEnabled": {
+                        "type": "integer",
+                        "description": "是否启用，1为启用，0为禁用",
+                        "format": "int32",
+                        "example": 1
+                    }
+                },
+                "description": "活动类型信息"
+            },
+            "ActivityTypeVO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "类型ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "typeCode": {
+                        "type": "string",
+                        "description": "类型编码",
+                        "example": "ACADEMIC_LECTURE"
+                    },
+                    "typeName": {
+                        "type": "string",
+                        "description": "类型名称",
+                        "example": "学术讲座"
+                    },
+                    "sortOrder": {
+                        "type": "integer",
+                        "description": "排序顺序，数字越小越靠前",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "isEnabled": {
+                        "type": "integer",
+                        "description": "是否启用，1为启用，0为禁用",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "isDeleted": {
+                        "type": "integer",
+                        "description": "软删除标记：0-未删除, 1-已删除",
+                        "format": "int32",
+                        "example": 0
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "description": "更新时间",
+                        "format": "date-time"
+                    }
+                },
+                "description": "活动类型"
+            },
+            "ResultActivityTypeVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ActivityTypeVO"
+                    }
+                }
+            },
+            "RegistrationDTO": {
+                "required": [
+                    "activityId",
+                    "studentCollege",
+                    "studentName",
+                    "studentPhone"
+                ],
+                "type": "object",
+                "properties": {
+                    "activityId": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "studentName": {
+                        "maxLength": 50,
+                        "minLength": 2,
+                        "type": "string",
+                        "description": "学生姓名",
+                        "example": "张三"
+                    },
+                    "studentPhone": {
+                        "pattern": "^1[3-9]\\d{9}$",
+                        "type": "string",
+                        "description": "学生手机号",
+                        "example": "13800138000"
+                    },
+                    "studentCollege": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "学生学院",
+                        "example": "计算机学院"
+                    },
+                    "remarks": {
+                        "type": "string",
+                        "description": "备注信息",
+                        "example": "希望参加此活动学习相关知识"
+                    }
+                },
+                "description": "报名信息"
+            },
+            "RegistrationVO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "报名ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "activityId": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "activityName": {
+                        "type": "string",
+                        "description": "活动名称",
+                        "example": "新生计算机基础讲座"
+                    },
+                    "studentName": {
+                        "type": "string",
+                        "description": "学生姓名",
+                        "example": "张三"
+                    },
+                    "studentPhone": {
+                        "type": "string",
+                        "description": "学生手机号",
+                        "example": "13800138000"
+                    },
+                    "studentCollege": {
+                        "type": "string",
+                        "description": "学生学院",
+                        "example": "计算机学院"
+                    },
+                    "registrationStatus": {
+                        "type": "integer",
+                        "description": "报名状态：1-报名成功, 2-已取消",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "registrationStatusName": {
+                        "type": "string",
+                        "description": "报名状态名称",
+                        "example": "报名成功"
+                    },
+                    "checkInStatus": {
+                        "type": "integer",
+                        "description": "签到状态：0-未签到, 1-已签到",
+                        "format": "int32",
+                        "example": 0
+                    },
+                    "checkInStatusName": {
+                        "type": "string",
+                        "description": "签到状态名称",
+                        "example": "未签到"
+                    },
+                    "checkInTime": {
+                        "type": "string",
+                        "description": "签到时间",
+                        "format": "date-time"
+                    },
+                    "remarks": {
+                        "type": "string",
+                        "description": "备注信息",
+                        "example": "希望参加此活动学习相关知识"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "报名时间",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "description": "更新时间",
+                        "format": "date-time"
+                    },
+                    "canCancel": {
+                        "type": "boolean",
+                        "description": "是否可以取消报名",
+                        "example": true
+                    },
+                    "canCheckIn": {
+                        "type": "boolean",
+                        "description": "是否可以签到",
+                        "example": true
+                    }
+                },
+                "description": "报名信息"
+            },
+            "ResultRegistrationVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/RegistrationVO"
+                    }
+                }
+            },
+            "CheckInDTO": {
+                "required": [
+                    "activityId",
+                    "studentPhone"
+                ],
+                "type": "object",
+                "properties": {
+                    "activityId": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "studentPhone": {
+                        "pattern": "^1[3-9]\\d{9}$",
+                        "type": "string",
+                        "description": "学生手机号",
+                        "example": "13800138000"
+                    }
+                },
+                "description": "签到信息"
+            },
+            "CheckInByTokenDTO": {
+                "required": [
+                    "checkInToken",
+                    "studentPhone"
+                ],
+                "type": "object",
+                "properties": {
+                    "checkInToken": {
+                        "type": "string",
+                        "description": "签到Token(从二维码获取)",
+                        "example": "eyJhbGciOiJIUzI1NiJ9..."
+                    },
+                    "studentPhone": {
+                        "pattern": "^1[3-9]\\d{9}$",
+                        "type": "string",
+                        "description": "学生手机号",
+                        "example": "13800138000"
+                    }
+                },
+                "description": "签到信息"
+            },
+            "BatchCheckInResult": {
+                "type": "object",
+                "properties": {
+                    "totalCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "successCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "failCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "failedPhones": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "ResultBatchCheckInResult": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/BatchCheckInResult"
+                    }
+                }
+            },
+            "FileUploadResultDTO": {
+                "type": "object",
+                "properties": {
+                    "fileId": {
+                        "type": "string",
+                        "description": "文件ID",
+                        "example": "activity_cover_20231215_001"
+                    },
+                    "originalFileName": {
+                        "type": "string",
+                        "description": "原始文件名",
+                        "example": "活动封面.jpg"
+                    },
+                    "fileName": {
+                        "type": "string",
+                        "description": "存储文件名",
+                        "example": "activity_cover_20231215_001.jpg"
+                    },
+                    "fileSize": {
+                        "type": "integer",
+                        "description": "文件大小（字节）",
+                        "format": "int64",
+                        "example": 1024000
+                    },
+                    "contentType": {
+                        "type": "string",
+                        "description": "文件类型",
+                        "example": "image/jpeg"
+                    },
+                    "purpose": {
+                        "type": "string",
+                        "description": "文件用途",
+                        "example": "activity_cover"
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "访问URL",
+                        "example": "http://minio-server:9000/bucket/activity_cover_20231215_001.jpg"
+                    },
+                    "temporaryUrl": {
+                        "type": "string",
+                        "description": "临时访问链接（带过期时间）",
+                        "example": "http://minio-server:9000/bucket/activity_cover_20231215_001.jpg?X-Amz-Security-Token=xxx"
+                    },
+                    "extension": {
+                        "type": "string",
+                        "description": "文件扩展名",
+                        "example": ".jpg"
+                    },
+                    "uploadTime": {
+                        "type": "integer",
+                        "description": "上传时间戳",
+                        "format": "int64",
+                        "example": 1702588800000
+                    }
+                },
+                "description": "文件上传结果"
+            },
+            "ResultFileUploadResultDTO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/FileUploadResultDTO"
+                    }
+                }
+            },
+            "ResultListFileUploadResultDTO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FileUploadResultDTO"
+                        }
+                    }
+                }
+            },
+            "AdminLoginDTO": {
+                "required": [
+                    "password",
+                    "username"
+                ],
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "maxLength": 50,
+                        "minLength": 3,
+                        "type": "string",
+                        "description": "用户名",
+                        "example": "admin"
+                    },
+                    "password": {
+                        "maxLength": 100,
+                        "minLength": 6,
+                        "type": "string",
+                        "description": "密码",
+                        "example": "admin123"
+                    }
+                },
+                "description": "登录信息"
+            },
+            "AdminLoginVO": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "JWT访问令牌",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "tokenType": {
+                        "type": "string",
+                        "description": "令牌类型",
+                        "example": "Bearer"
+                    },
+                    "adminId": {
+                        "type": "integer",
+                        "description": "管理员ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "用户名",
+                        "example": "admin"
+                    },
+                    "realName": {
+                        "type": "string",
+                        "description": "真实姓名",
+                        "example": "活动管理员"
+                    },
+                    "roleType": {
+                        "type": "integer",
+                        "description": "角色类型",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "roleName": {
+                        "type": "string",
+                        "description": "角色名称",
+                        "example": "普通管理员"
+                    },
+                    "expiresIn": {
+                        "type": "integer",
+                        "description": "令牌过期时间（毫秒）",
+                        "format": "int64",
+                        "example": 3600000
+                    }
+                },
+                "description": "管理员登录响应"
+            },
+            "ResultAdminLoginVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/AdminLoginVO"
+                    }
+                }
+            },
+            "ActivityCreateDTO": {
+                "required": [
+                    "activityName",
+                    "activityType",
+                    "contactPerson",
+                    "contactPhone",
+                    "endTime",
+                    "location",
+                    "organizer",
+                    "registrationEndTime",
+                    "registrationStartTime",
+                    "startTime"
+                ],
+                "type": "object",
+                "properties": {
+                    "activityName": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "活动名称",
+                        "example": "新生计算机基础讲座"
+                    },
+                    "activityDescription": {
+                        "maxLength": 2000,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "活动描述",
+                        "example": "由计算机学院主办，面向全校新生的计算机入门讲座"
+                    },
+                    "activityType": {
+                        "type": "string",
+                        "description": "活动类型编码",
+                        "example": "ACADEMIC"
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "description": "活动开始时间",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "description": "活动结束时间",
+                        "format": "date-time"
+                    },
+                    "location": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "活动地点",
+                        "example": "学术报告厅A201"
+                    },
+                    "organizer": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "主办方",
+                        "example": "计算机学院"
+                    },
+                    "contactPerson": {
+                        "maxLength": 50,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "负责人姓名",
+                        "example": "王老师"
+                    },
+                    "contactPhone": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "联系电话",
+                        "example": "13812345678"
+                    },
+                    "maxParticipants": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "最大参与人数，null表示不限制",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "registrationStartTime": {
+                        "type": "string",
+                        "description": "报名开始时间",
+                        "format": "date-time"
+                    },
+                    "registrationEndTime": {
+                        "type": "string",
+                        "description": "报名截止时间",
+                        "format": "date-time"
+                    },
+                    "posterUrl": {
+                        "type": "string",
+                        "description": "活动海报URL",
+                        "example": "https://example.com/poster.jpg"
+                    }
+                },
+                "description": "活动创建信息"
+            },
+            "ActivityTypeCreateDTO": {
+                "required": [
+                    "isEnabled",
+                    "sortOrder",
+                    "typeCode",
+                    "typeName"
+                ],
+                "type": "object",
+                "properties": {
+                    "typeName": {
+                        "maxLength": 50,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "类型名称",
+                        "example": "学术讲座"
+                    },
+                    "typeCode": {
+                        "pattern": "^[A-Z_]{2,20}$",
+                        "type": "string",
+                        "description": "类型编码",
+                        "example": "ACADEMIC_LECTURE"
+                    },
+                    "sortOrder": {
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "排序顺序，数字越小越靠前",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "isEnabled": {
+                        "type": "integer",
+                        "description": "是否启用，1为启用，0为禁用",
+                        "format": "int32",
+                        "example": 1
+                    }
+                },
+                "description": "活动类型信息"
+            },
+            "ResultInteger": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "CheckInQRCodeVO": {
+                "type": "object",
+                "properties": {
+                    "qrContent": {
+                        "type": "string",
+                        "description": "二维码内容(签到链接)",
+                        "example": "https://example.com/h5/checkin?token=xxx"
+                    },
+                    "checkInToken": {
+                        "type": "string",
+                        "description": "签到Token(有效期30分钟)",
+                        "example": "eyJhbGciOiJIUzI1NiJ9..."
+                    },
+                    "qrCodeImage": {
+                        "type": "string",
+                        "description": "二维码图片Base64",
+                        "example": "data:image/png;base64,iVBORw0KGg..."
+                    },
+                    "expiresIn": {
+                        "type": "integer",
+                        "description": "Token过期时间(秒)",
+                        "format": "int64",
+                        "example": 1800
+                    }
+                },
+                "description": "签到二维码信息"
+            },
+            "ResultCheckInQRCodeVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/CheckInQRCodeVO"
+                    }
+                }
+            },
+            "RegistrationStatisticsVO": {
+                "type": "object",
+                "properties": {
+                    "activityId": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "activityName": {
+                        "type": "string",
+                        "description": "活动名称",
+                        "example": "新生计算机基础讲座"
+                    },
+                    "maxParticipants": {
+                        "type": "integer",
+                        "description": "最大参与人数，null表示不限制",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "totalRegistrations": {
+                        "type": "integer",
+                        "description": "总报名人数",
+                        "format": "int32",
+                        "example": 150
+                    },
+                    "validRegistrations": {
+                        "type": "integer",
+                        "description": "有效报名人数（未取消）",
+                        "format": "int32",
+                        "example": 145
+                    },
+                    "cancelledRegistrations": {
+                        "type": "integer",
+                        "description": "已取消报名人数",
+                        "format": "int32",
+                        "example": 5
+                    },
+                    "checkedInCount": {
+                        "type": "integer",
+                        "description": "已签到人数",
+                        "format": "int32",
+                        "example": 120
+                    },
+                    "notCheckedInCount": {
+                        "type": "integer",
+                        "description": "未签到人数",
+                        "format": "int32",
+                        "example": 25
+                    },
+                    "remainingSlots": {
+                        "type": "integer",
+                        "description": "剩余名额，null表示不限制",
+                        "format": "int32",
+                        "example": 50
+                    },
+                    "registrationProgress": {
+                        "type": "number",
+                        "description": "报名进度百分比",
+                        "format": "double",
+                        "example": 75.0
+                    },
+                    "checkInRate": {
+                        "type": "number",
+                        "description": "签到率百分比",
+                        "format": "double",
+                        "example": 82.76
+                    },
+                    "attendanceRate": {
+                        "type": "number",
+                        "description": "出勤率百分比",
+                        "format": "double",
+                        "example": 82.76
+                    }
+                },
+                "description": "报名统计信息"
+            },
+            "ResultRegistrationStatisticsVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/RegistrationStatisticsVO"
+                    }
+                }
+            },
+            "RegistrationQueryDTO": {
+                "type": "object",
+                "properties": {
+                    "pageNum": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "页码",
+                        "format": "int32",
+                        "example": 1,
+                        "default": 1
+                    },
+                    "pageSize": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "页大小",
+                        "format": "int32",
+                        "example": 10,
+                        "default": 10
+                    },
+                    "activityId": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "studentName": {
+                        "type": "string",
+                        "description": "学生姓名关键词",
+                        "example": "张"
+                    },
+                    "studentPhone": {
+                        "type": "string",
+                        "description": "手机号",
+                        "example": "13800138000"
+                    },
+                    "studentCollege": {
+                        "type": "string",
+                        "description": "学院",
+                        "example": "计算机学院"
+                    },
+                    "registrationStatus": {
+                        "type": "integer",
+                        "description": "报名状态：1-报名成功, 2-已取消",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "checkInStatus": {
+                        "type": "integer",
+                        "description": "签到状态：0-未签到, 1-已签到",
+                        "format": "int32",
+                        "example": 0
+                    },
+                    "sortBy": {
+                        "type": "string",
+                        "description": "排序字段：createTime,studentName",
+                        "example": "createTime"
+                    },
+                    "sortOrder": {
+                        "type": "string",
+                        "description": "排序方向：ASC,DESC",
+                        "example": "DESC"
+                    }
+                },
+                "description": "报名查询请求"
+            },
+            "PageInfoRegistrationVO": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/RegistrationVO"
+                        }
+                    },
+                    "pageNum": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "startRow": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "endRow": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "prePage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "nextPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "isFirstPage": {
+                        "type": "boolean"
+                    },
+                    "isLastPage": {
+                        "type": "boolean"
+                    },
+                    "hasPreviousPage": {
+                        "type": "boolean"
+                    },
+                    "hasNextPage": {
+                        "type": "boolean"
+                    },
+                    "navigatePages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "navigatepageNums": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "navigateFirstPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "navigateLastPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "ResultPageInfoRegistrationVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageInfoRegistrationVO"
+                    }
+                }
+            },
+            "ResultListActivityTypeVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ActivityTypeVO"
+                        }
+                    }
+                }
+            },
+            "ActivityQueryDTO": {
+                "type": "object",
+                "properties": {
+                    "pageNum": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "页码",
+                        "format": "int32",
+                        "example": 1,
+                        "default": 1
+                    },
+                    "pageSize": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "页大小",
+                        "format": "int32",
+                        "example": 10,
+                        "default": 10
+                    },
+                    "keyword": {
+                        "type": "string",
+                        "description": "活动名称关键词",
+                        "example": "计算机"
+                    },
+                    "activityType": {
+                        "type": "string",
+                        "description": "活动类型编码",
+                        "example": "ACADEMIC"
+                    },
+                    "activityStatus": {
+                        "type": "integer",
+                        "description": "活动状态：0-未发布,1-报名中,2-报名结束,3-进行中,4-已结束,5-已取消",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "creatorId": {
+                        "type": "integer",
+                        "description": "创建者ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "sortBy": {
+                        "type": "string",
+                        "description": "排序字段：createTime,startTime,registrationCount",
+                        "example": "createTime"
+                    },
+                    "sortOrder": {
+                        "type": "string",
+                        "description": "排序方向：ASC,DESC",
+                        "example": "DESC"
+                    }
+                },
+                "description": "活动查询请求"
+            },
+            "ActivityListVO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "activityName": {
+                        "type": "string",
+                        "description": "活动名称",
+                        "example": "新生计算机基础讲座"
+                    },
+                    "activityDescription": {
+                        "type": "string",
+                        "description": "活动描述",
+                        "example": "由计算机学院主办，面向全校新生的计算机入门讲座"
+                    },
+                    "activityTypeName": {
+                        "type": "string",
+                        "description": "活动类型名称",
+                        "example": "学术讲座"
+                    },
+                    "activityStatus": {
+                        "type": "integer",
+                        "description": "活动状态：0-未发布,1-报名中,2-报名结束,3-进行中,4-已结束,5-已取消",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "activityStatusName": {
+                        "type": "string",
+                        "description": "活动状态名称",
+                        "example": "报名中"
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "description": "活动开始时间",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "description": "活动结束时间",
+                        "format": "date-time"
+                    },
+                    "location": {
+                        "type": "string",
+                        "description": "活动地点",
+                        "example": "学术报告厅A201"
+                    },
+                    "organizer": {
+                        "type": "string",
+                        "description": "主办方",
+                        "example": "计算机学院"
+                    },
+                    "posterUrl": {
+                        "type": "string",
+                        "description": "活动海报URL",
+                        "example": "https://example.com/poster.jpg"
+                    },
+                    "maxParticipants": {
+                        "type": "integer",
+                        "description": "最大参与人数，null表示不限制",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "currentRegistrationCount": {
+                        "type": "integer",
+                        "description": "当前报名人数",
+                        "format": "int32",
+                        "example": 150
+                    },
+                    "registrationEndTime": {
+                        "type": "string",
+                        "description": "报名截止时间",
+                        "format": "date-time"
+                    },
+                    "creatorName": {
+                        "type": "string",
+                        "description": "创建者姓名",
+                        "example": "管理员"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time"
+                    },
+                    "canRegister": {
+                        "type": "boolean",
+                        "description": "是否可以报名",
+                        "example": true
+                    },
+                    "remainingSlots": {
+                        "type": "integer",
+                        "description": "剩余名额，null表示不限制",
+                        "format": "int32",
+                        "example": 50
+                    },
+                    "registrationProgress": {
+                        "type": "number",
+                        "description": "报名进度百分比",
+                        "format": "double",
+                        "example": 75
+                    }
+                },
+                "description": "活动列表项"
+            },
+            "PageInfoActivityListVO": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ActivityListVO"
+                        }
+                    },
+                    "pageNum": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "startRow": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "endRow": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "prePage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "nextPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "isFirstPage": {
+                        "type": "boolean"
+                    },
+                    "isLastPage": {
+                        "type": "boolean"
+                    },
+                    "hasPreviousPage": {
+                        "type": "boolean"
+                    },
+                    "hasNextPage": {
+                        "type": "boolean"
+                    },
+                    "navigatePages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "navigatepageNums": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "navigateFirstPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "navigateLastPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "ResultPageInfoActivityListVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageInfoActivityListVO"
+                    }
+                }
+            },
+            "PageConfig": {
+                "type": "object",
+                "properties": {
+                    "appName": {
+                        "type": "string"
+                    },
+                    "checkInTitle": {
+                        "type": "string"
+                    },
+                    "phonePlaceholder": {
+                        "type": "string"
+                    },
+                    "submitButtonText": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ResultPageConfig": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageConfig"
+                    }
+                }
+            },
+            "ResultMapStringObject": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "ResultString": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AdminInfoVO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "管理员ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "用户名",
+                        "example": "admin"
+                    },
+                    "realName": {
+                        "type": "string",
+                        "description": "真实姓名",
+                        "example": "活动管理员"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "手机号码",
+                        "example": "13800138001"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "电子邮箱",
+                        "example": "admin@example.com"
+                    },
+                    "roleType": {
+                        "type": "integer",
+                        "description": "角色类型：1-普通管理员, 2-超级管理员",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "roleName": {
+                        "type": "string",
+                        "description": "角色名称",
+                        "example": "普通管理员"
+                    },
+                    "accountStatus": {
+                        "type": "integer",
+                        "description": "账户状态：0-禁用, 1-启用",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "lastLoginTime": {
+                        "type": "string",
+                        "description": "最后登录时间",
+                        "format": "date-time"
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time"
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "description": "更新时间",
+                        "format": "date-time"
+                    }
+                },
+                "description": "管理员信息"
+            },
+            "ResultAdminInfoVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/AdminInfoVO"
+                    }
+                }
+            },
+            "ActivityTypeQueryDTO": {
+                "type": "object",
+                "properties": {
+                    "pageNum": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "页码",
+                        "format": "int32",
+                        "example": 1,
+                        "default": 1
+                    },
+                    "pageSize": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "页大小",
+                        "format": "int32",
+                        "example": 10,
+                        "default": 10
+                    },
+                    "typeName": {
+                        "type": "string",
+                        "description": "类型名称关键词",
+                        "example": "学术"
+                    },
+                    "typeCode": {
+                        "type": "string",
+                        "description": "类型编码",
+                        "example": "ACADEMIC"
+                    }
+                },
+                "description": "活动类型查询请求"
+            },
+            "PageInfoActivityTypeVO": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ActivityTypeVO"
+                        }
+                    },
+                    "pageNum": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "startRow": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "endRow": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "prePage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "nextPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "isFirstPage": {
+                        "type": "boolean"
+                    },
+                    "isLastPage": {
+                        "type": "boolean"
+                    },
+                    "hasPreviousPage": {
+                        "type": "boolean"
+                    },
+                    "hasNextPage": {
+                        "type": "boolean"
+                    },
+                    "navigatePages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "navigatepageNums": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "navigateFirstPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "navigateLastPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "ResultPageInfoActivityTypeVO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageInfoActivityTypeVO"
+                    }
+                }
+            },
+            "ResultBoolean": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "Bearer Authentication": {
+                "type": "http",
+                "description": "请输入JWT Token，格式：直接输入token即可（不需要Bearer前缀）",
+                "name": "Bearer Authentication",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

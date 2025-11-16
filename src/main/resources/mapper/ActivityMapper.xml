@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xidian.activities.mapper.ActivityMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.xidian.activities.entity.Activity">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+        <result column="activity_description" property="activityDescription" jdbcType="LONGVARCHAR" />
+        <result column="activity_type" property="activityType" jdbcType="VARCHAR" />
+        <result column="activity_status" property="activityStatus" jdbcType="INTEGER" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="location" property="location" jdbcType="VARCHAR" />
+        <result column="organizer" property="organizer" jdbcType="VARCHAR" />
+        <result column="contact_person" property="contactPerson" jdbcType="VARCHAR" />
+        <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
+        <result column="poster_url" property="posterUrl" jdbcType="VARCHAR" />
+        <result column="max_participants" property="maxParticipants" jdbcType="INTEGER" />
+        <result column="registration_start_time" property="registrationStartTime"
+            jdbcType="TIMESTAMP" />
+        <result column="registration_end_time" property="registrationEndTime" jdbcType="TIMESTAMP" />
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+        <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <!-- 活动类型关联 -->
+    <resultMap id="ActivityWithTypeResultMap" type="com.xidian.activities.entity.Activity"
+        extends="BaseResultMap">
+        <association property="activityTypeInfo"
+            javaType="com.xidian.activities.entity.ActivityType">
+            <id column="type_id" property="id" jdbcType="INTEGER" />
+            <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+            <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+            <result column="type_sort_order" property="sortOrder" jdbcType="INTEGER" />
+            <result column="type_is_enabled" property="isEnabled" jdbcType="INTEGER" />
+        </association>
+    </resultMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List"> id, activity_name, activity_description, activity_type,
+        activity_status, start_time, end_time, location, organizer, contact_person, contact_phone,
+        poster_url, max_participants, registration_start_time, registration_end_time, creator_id,
+        is_deleted, create_time, update_time </sql>
+
+    <!-- 带活动类型的字段 -->
+    <sql id="Activity_With_Type_Columns"> a.id, a.activity_name, a.activity_description,
+        a.activity_type, a.activity_status, a.start_time, a.end_time, a.location, a.organizer,
+        a.contact_person, a.contact_phone, a.poster_url, a.max_participants,
+        a.registration_start_time, a.registration_end_time, a.creator_id, a.is_deleted,
+        a.create_time, a.update_time, t.id as type_id, t.type_name, t.type_code, t.sort_order as
+        type_sort_order, t.is_enabled as type_is_enabled </sql>
+
+    <!-- 插入活动 -->
+    <insert id="insert" parameterType="com.xidian.activities.entity.Activity"
+        useGeneratedKeys="true" keyProperty="id"> INSERT INTO activities ( activity_name,
+        activity_description, activity_type, activity_status, start_time, end_time, location,
+        organizer, contact_person, contact_phone, poster_url, max_participants,
+        registration_start_time, registration_end_time, creator_id, is_deleted, create_time,
+        update_time ) VALUES ( #{activityName}, #{activityDescription}, #{activityType},
+        #{activityStatus}, #{startTime}, #{endTime}, #{location}, #{organizer}, #{contactPerson},
+        #{contactPhone}, #{posterUrl}, #{maxParticipants}, #{registrationStartTime},
+        #{registrationEndTime}, #{creatorId}, #{isDeleted}, #{createTime}, #{updateTime} ) </insert>
+
+    <!-- 更新活动 -->
+    <update id="updateById" parameterType="com.xidian.activities.entity.Activity"> UPDATE activities <set>
+            <if test="activityName != null">activity_name = #{activityName},</if>
+            <if
+                test="activityDescription != null">activity_description = #{activityDescription},</if>
+            <if
+                test="activityType != null">activity_type = #{activityType},</if>
+            <if
+                test="activityStatus != null">activity_status = #{activityStatus},</if>
+            <if
+                test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time
+        = #{endTime},</if>
+            <if test="location != null">location = #{location},</if>
+            <if
+                test="organizer != null">organizer = #{organizer},</if>
+            <if
+                test="contactPerson != null">contact_person = #{contactPerson},</if>
+            <if
+                test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if
+                test="posterUrl != null">poster_url = #{posterUrl},</if>
+            <if
+                test="maxParticipants != null">max_participants = #{maxParticipants},</if>
+            <if
+                test="registrationStartTime != null">registration_start_time =
+        #{registrationStartTime},</if>
+            <if test="registrationEndTime != null">registration_end_time =
+        #{registrationEndTime},</if> update_time = NOW() </set> WHERE id = #{id} AND is_deleted = 0 </update>
+
+    <!-- 根据ID查询活动 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="ActivityWithTypeResultMap">
+        SELECT <include refid="Activity_With_Type_Columns" /> FROM activities a LEFT JOIN
+        activity_types t ON a.activity_type = t.type_code AND t.is_enabled = 1 WHERE a.id = #{id}
+        AND a.is_deleted = 0 </select>
+
+    <!-- 根据条件查询活动列表(使用ActivityQueryDTO) -->
+    <select id="selectByConditions" parameterType="com.xidian.activities.dto.ActivityQueryDTO"
+        resultMap="ActivityWithTypeResultMap"> SELECT <include refid="Activity_With_Type_Columns" />
+        FROM activities a LEFT JOIN activity_types t ON a.activity_type = t.type_code AND
+        t.is_enabled = 1 WHERE a.is_deleted = 0 <if test="keyword != null and keyword != ''"> AND
+        a.activity_name LIKE CONCAT('%', #{keyword}, '%') </if>
+        <if
+            test="activityType != null and activityType != ''"> AND a.activity_type =
+        #{activityType} </if>
+        <if test="activityStatus != null"> AND a.activity_status =
+        #{activityStatus} </if>
+        <if test="creatorId != null"> AND a.creator_id = #{creatorId} </if>
+        ORDER BY <choose>
+            <when test="sortBy == 'startTime'"> a.start_time </when>
+            <when test="sortBy == 'registrationCount'"> a.max_participants </when>
+            <otherwise> a.create_time </otherwise>
+        </choose>
+        <choose>
+            <when test="sortOrder == 'ASC'"> ASC </when>
+            <otherwise> DESC </otherwise>
+        </choose>
+    </select>
+
+    <!-- 根据状态查询活动列表（用于定时任务） -->
+    <select id="findActivitiesByStatus" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM activities WHERE activity_status =
+        #{activityStatus} AND is_deleted = 0 ORDER BY create_time ASC </select>
+
+    <!-- 统计活动的报名人数 -->
+    <select id="countRegistrations" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM registrations WHERE activity_id = #{activityId} AND registration_status
+        = 1 AND is_deleted = 0 </select>
+
+</mapper>

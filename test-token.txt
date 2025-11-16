@@ -1,0 +1,31 @@
+=================================
+测试用永久Token（有效期100年）
+生成时间: Sun Nov 16 17:37:42 CST 2025
+=================================
+
+用户名: admin
+管理员ID: 1
+角色类型: 2 (2=超级管理员, 1=普通管理员)
+过期时间: Tue Oct 23 17:37:42 CST 2125
+
+完整Token:
+eyJhbGciOiJIUzI1NiJ9.eyJhZG1pbklkIjoxLCJyb2xlVHlwZSI6MiwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFkbWluIiwiaWF0IjoxNzYzMjg1ODYyLCJleHAiOjQ5MTY4ODU4NjJ9.dvl0zYF5NGIRP0Xqe-lnqeM3F5yJU1d8Wio_-whhIic
+
+使用方式:
+【方式1 - Swagger UI】
+1. 访问 http://localhost:8080/swagger-ui.html
+2. 点击页面右上角的 [Authorize] 按钮
+3. 在弹出的对话框中输入: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhZG1pbklkIjoxLCJyb2xlVHlwZSI6MiwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFkbWluIiwiaWF0IjoxNzYzMjg1ODYyLCJleHAiOjQ5MTY4ODU4NjJ9.dvl0zYF5NGIRP0Xqe-lnqeM3F5yJU1d8Wio_-whhIic
+4. 点击 [Authorize] 按钮完成认证
+5. 现在可以直接在Swagger中测试所有需要认证的接口
+
+【方式2 - HTTP请求头】
+在请求头中添加: Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhZG1pbklkIjoxLCJyb2xlVHlwZSI6MiwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFkbWluIiwiaWF0IjoxNzYzMjg1ODYyLCJleHAiOjQ5MTY4ODU4NjJ9.dvl0zYF5NGIRP0Xqe-lnqeM3F5yJU1d8Wio_-whhIic
+
+【方式3 - Postman/Apifox】
+1. 在 Authorization 选项卡中选择 Bearer Token
+2. 将上面的完整Token粘贴到 Token 输入框中
+
+=================================
+注意: 此Token仅用于开发测试，请勿在生产环境使用！
+=================================
