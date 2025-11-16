@@ -33,3 +33,8 @@ build/
 .vscode/
 
 CLAUDE.md
+*清单.md
+*记录.md
+code_index.md
+physical_fk.sql
+application.yaml
