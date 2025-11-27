@@ -36,7 +36,7 @@
     <!-- 带活动信息的字段 -->
     <sql id="Registration_With_Activity_Columns"> r.id, r.activity_id, r.student_name,
         r.student_phone, r.student_college, r.registration_status, r.check_in_status,
-        r.check_in_time, r.is_deleted, r.create_time, r.update_time, a.activity_name, a.location,
+        r.check_in_time, r.is_deleted, r.create_time, r.update_time, a.activity_name, a.location,z
         a.start_time, a.end_time </sql>
 
     <!-- 插入报名记录 -->
@@ -51,16 +51,12 @@
     <update id="updateById" parameterType="com.xidian.activities.entity.Registration"> UPDATE
         registrations <set>
             <if test="studentName != null">student_name = #{studentName},</if>
-            <if
-                test="studentPhone != null">student_phone = #{studentPhone},</if>
-            <if
-                test="studentCollege != null">student_college = #{studentCollege},</if>
-            <if
-                test="registrationStatus != null">registration_status = #{registrationStatus},</if>
-            <if
-                test="checkInStatus != null">check_in_status = #{checkInStatus},</if>
-            <if
-                test="checkInTime != null">check_in_time = #{checkInTime},</if> update_time = NOW() </set>
+            <if test="studentPhone != null">student_phone = #{studentPhone},</if>
+            <if test="studentCollege != null">student_college = #{studentCollege},</if>
+            <if test="registrationStatus != null">registration_status = #{registrationStatus},</if>
+            <if test="checkInStatus != null">check_in_status = #{checkInStatus},</if>
+            <if test="checkInTime != null">check_in_time = #{checkInTime},</if> 
+            update_time = NOW() </set>
         WHERE id = #{id} AND is_deleted = 0 </update>
 
     <!-- 软删除报名记录 -->
@@ -76,46 +72,89 @@
     <!-- 检查是否已报名 -->
     <select id="checkExistsByActivityAndPhone" resultType="java.lang.Integer"> SELECT COUNT(*) FROM
         registrations WHERE activity_id = #{activityId} AND student_phone = #{studentPhone} AND
-        registration_status = 1 AND is_deleted = 0 </select>
+        registration_status =  1 AND is_deleted = 0 </select>
 
     <!-- 根据活动ID和手机号查询报名记录 -->
     <select id="selectByActivityIdAndPhone" resultMap="BaseResultMap"> SELECT <include
             refid="Base_Column_List" /> FROM registrations WHERE activity_id = #{activityId} AND
         student_phone = #{studentPhone} AND registration_status = 1 AND is_deleted = 0 LIMIT 1 </select>
 
-    <!-- 分页查询报名记录 -->
+    <!-- 检查是否存在重复报名（返回boolean） -->
+    <select id="existsByActivityAndPhone" resultType="java.lang.Boolean">
+        SELECT COUNT(*) > 0 FROM registrations 
+        WHERE activity_id = #{activityId} AND student_phone = #{studentPhone} 
+        AND registration_status = 1 AND is_deleted = 0
+    </select>
+
+    <!-- 根据活动ID和手机号查询报名记录（findByActivityAndPhone方法） -->
+    <select id="findByActivityAndPhone" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM registrations 
+        WHERE activity_id = #{activityId} AND student_phone = #{studentPhone} 
+        AND registration_status = 1 AND is_deleted = 0 LIMIT 1
+    </select>
+
+    <!-- 分页查询报名记录（已修复：created_time → create_time） -->
     <select id="selectList" parameterType="com.xidian.activities.dto.RegistrationQueryDTO"
         resultMap="RegistrationWithActivityResultMap"> SELECT <include
             refid="Registration_With_Activity_Columns" /> FROM registrations r LEFT JOIN activities
         a ON r.activity_id = a.id AND a.is_deleted = 0 WHERE r.is_deleted = 0 <if
             test="activityId != null"> AND r.activity_id = #{activityId} </if>
-        <if
-            test="studentName != null and studentName != ''"> AND r.student_name LIKE CONCAT('%',
+        <if test="studentName != null and studentName != ''"> AND r.student_name LIKE CONCAT('%',
         #{studentName}, '%') </if>
         <if test="studentPhone != null and studentPhone != ''"> AND
         r.student_phone = #{studentPhone} </if>
-        <if
-            test="studentCollege != null and studentCollege != ''"> AND r.student_college LIKE
+        <if test="studentCollege != null and studentCollege != ''"> AND r.student_college LIKE
         CONCAT('%', #{studentCollege}, '%') </if>
         <if test="registrationStatus != null"> AND
         r.registration_status = #{registrationStatus} </if>
         <if test="checkInStatus != null"> AND
-        r.check_in_status = #{checkInStatus} </if> ORDER BY r.created_time DESC </select>
+        r.check_in_status = #{checkInStatus} </if> 
+        ORDER BY r.create_time DESC </select>
+
+    <!-- 根据条件查询报名列表（selectByConditions方法） -->
+    <select id="selectByConditions" parameterType="com.xidian.activities.dto.RegistrationQueryDTO"
+        resultMap="RegistrationWithActivityResultMap"> SELECT <include
+            refid="Registration_With_Activity_Columns" /> FROM registrations r LEFT JOIN activities
+        a ON r.activity_id = a.id AND a.is_deleted = 0 WHERE r.is_deleted = 0 <if
+            test="activityId != null"> AND r.activity_id = #{activityId} </if>
+        <if test="studentName != null and studentName != ''"> AND r.student_name LIKE CONCAT('%',
+        #{studentName}, '%') </if>
+        <if test="studentPhone != null and studentPhone != ''"> AND
+        r.student_phone = #{studentPhone} </if>
+        <if test="studentCollege != null and studentCollege != ''"> AND r.student_college LIKE
+        CONCAT('%', #{studentCollege}, '%') </if>
+        <if test="registrationStatus != null"> AND
+        r.registration_status = #{registrationStatus} </if>
+        <if test="checkInStatus != null"> AND
+        r.check_in_status = #{checkInStatus} </if> 
+        ORDER BY r.create_time DESC </select>
 
     <!-- 统计活动报名人数 -->
     <select id="countByActivityId" resultType="java.lang.Long"> SELECT COUNT(*) FROM registrations
         WHERE activity_id = #{activityId} AND registration_status = 1 AND is_deleted = 0 </select>
 
-    <!-- 统计活动签到人数 -->
+    <!-- 统计活动有效报名人数（未取消） -->
+    <select id="countValidRegistrations" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM registrations 
+        WHERE activity_id = #{activityId} AND registration_status = 1 AND is_deleted = 0
+    </select>
+
+    <!-- 统计活动已签到人数 -->
+    <select id="countCheckedIn" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM registrations 
+        WHERE activity_id = #{activityId} AND registration_status = 1 AND check_in_status = 1 AND is_deleted = 0
+    </select>
+
+    <!-- 统计活动签到人数（原方法保留兼容性） -->
     <select id="countCheckInByActivityId" resultType="java.lang.Long"> SELECT COUNT(*) FROM
         registrations WHERE activity_id = #{activityId} AND registration_status = 1 AND
         check_in_status = 1 AND is_deleted = 0 </select>
 
-    <!-- 批量查询报名记录 -->
+    <!-- 批量查询报名记录（已修复：created_time → create_time） -->
     <select id="selectByRegistrationIds" resultMap="BaseResultMap"> SELECT <include
             refid="Base_Column_List" /> FROM registrations WHERE id IN <foreach item="id"
             collection="registrationIds" open="(" separator="," close=")"> #{id} </foreach> AND
-        is_deleted = 0 ORDER BY created_time DESC </select>
+        is_deleted = 0 ORDER BY create_time DESC </select>
 
     <!-- 批量签到 -->
     <update id="batchCheckIn" parameterType="map"> UPDATE registrations SET check_in_status = 1,
@@ -139,6 +178,12 @@
     <select id="selectAllByActivityId" resultMap="BaseResultMap"> SELECT <include
             refid="Base_Column_List" /> FROM registrations WHERE activity_id = #{activityId} AND
         is_deleted = 0 ORDER BY create_time DESC </select>
+
+    <!-- 统计所有报名记录数（包括已取消，不包括已删除） -->
+    <select id="countTotalRegistrations" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM registrations 
+        WHERE activity_id = #{activityId} AND is_deleted = 0
+    </select>
 
     <!-- 检查手机号格式是否正确（正则匹配） -->
     <select id="checkPhoneFormat" resultType="java.lang.Integer"> SELECT COUNT(*) FROM registrations

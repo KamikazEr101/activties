@@ -2,6 +2,7 @@ package com.xidian.activities.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xidian.activities.common.enums.ActivityStatusEnum;
 import com.xidian.activities.common.exception.BizException;
 import com.xidian.activities.common.login.LoginUserHolder;
 import com.xidian.activities.common.result.ResultCodeEnum;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,13 +53,8 @@ public class ActivityServiceImpl implements ActivityService {
     private RedisService redisService;
 
     // 活动状态映射
-    private static final Map<Integer, String> ACTIVITY_STATUS_MAP = Map.of(
-            0, "未发布",
-            1, "报名中",
-            2, "报名结束",
-            3, "进行中",
-            4, "已结束",
-            5, "已取消");
+    private static final Map<Integer, String> ACTIVITY_STATUS_MAP = Arrays.stream(ActivityStatusEnum.values())
+            .collect(Collectors.toMap(ActivityStatusEnum::getCode, ActivityStatusEnum::getDescription));
 
     @Override
     @Transactional
@@ -81,7 +78,7 @@ public class ActivityServiceImpl implements ActivityService {
         Activity activity = new Activity();
         BeanUtils.copyProperties(createDTO, activity);
         activity.setCreatorId(adminId);
-        activity.setActivityStatus(0); // 默认未发布
+        activity.setActivityStatus(ActivityStatusEnum.UNRELEASED.getCode()); // 默认未发布
         activity.setIsDeleted(0);
         activity.setCreateTime(LocalDateTime.now());
         activity.setUpdateTime(LocalDateTime.now());
@@ -153,7 +150,7 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ADMIN_ACCESS_FORBIDDEN);
         }
 
-        if (activity.getActivityStatus() >= 1) {
+        if (activity.getActivityStatus() >= ActivityStatusEnum.REGISTERING.getCode()) {
             throw BizException.of(ResultCodeEnum.ACTIVITY_NOT_DELETABLE);
         }
 
@@ -220,7 +217,7 @@ public class ActivityServiceImpl implements ActivityService {
 
         // 缓存未命中，查询数据库
         PageHelper.startPage(queryDTO.getPageNum(), queryDTO.getPageSize());
-        List<Activity> activityList = activityMapper.selectByConditions(queryDTO);
+        List<Activity> activityList = activityMapper.selectList(queryDTO);
 
         List<ActivityListVO> voList = activityList.stream()
                 .map(this::convertToListVO)
@@ -290,7 +287,7 @@ public class ActivityServiceImpl implements ActivityService {
 
         ActivityStatusUpdateDTO statusUpdateDTO = new ActivityStatusUpdateDTO();
         statusUpdateDTO.setActivityId(activityId);
-        statusUpdateDTO.setActivityStatus(1); // 报名中
+        statusUpdateDTO.setActivityStatus(ActivityStatusEnum.REGISTERING.getCode()); // 报名中
 
         return updateActivityStatus(statusUpdateDTO);
     }
@@ -300,7 +297,7 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityDetailVO cancelActivity(Long activityId) {
         ActivityStatusUpdateDTO statusUpdateDTO = new ActivityStatusUpdateDTO();
         statusUpdateDTO.setActivityId(activityId);
-        statusUpdateDTO.setActivityStatus(5); // 已取消
+        statusUpdateDTO.setActivityStatus(ActivityStatusEnum.CANCELLED.getCode()); // 已取消
 
         return updateActivityStatus(statusUpdateDTO);
     }
@@ -403,32 +400,31 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     private void validateStatusTransition(Integer currentStatus, Integer newStatus) {
-        switch (currentStatus) {
-            case 0:
-                if (newStatus != 1 && newStatus != 5) {
-                    throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "未发布的活动只能转为报名中或已取消状态");
-                }
-                break;
-            case 1:
-                if (newStatus != 2 && newStatus != 5) {
-                    throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "报名中的活动只能转为报名结束或已取消状态");
-                }
-                break;
-            case 2:
-                if (newStatus != 3 && newStatus != 5) {
-                    throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "报名结束的活动只能转为进行中或已取消状态");
-                }
-                break;
-            case 3:
-                if (newStatus != 4 && newStatus != 5) {
-                    throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "进行中的活动只能转为已结束或已取消状态");
-                }
-                break;
-            case 4:
-            case 5:
-                throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "已结束或已取消的活动无法修改状态");
-            default:
-                throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "无效的活动状态");
+        if (currentStatus.equals(ActivityStatusEnum.UNRELEASED.getCode())) {
+            if (!newStatus.equals(ActivityStatusEnum.REGISTERING.getCode())
+                    && !newStatus.equals(ActivityStatusEnum.CANCELLED.getCode())) {
+                throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "未发布的活动只能转为报名中或已取消状态");
+            }
+        } else if (currentStatus.equals(ActivityStatusEnum.REGISTERING.getCode())) {
+            if (!newStatus.equals(ActivityStatusEnum.REGISTRATION_ENDED.getCode())
+                    && !newStatus.equals(ActivityStatusEnum.CANCELLED.getCode())) {
+                throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "报名中的活动只能转为报名结束或已取消状态");
+            }
+        } else if (currentStatus.equals(ActivityStatusEnum.REGISTRATION_ENDED.getCode())) {
+            if (!newStatus.equals(ActivityStatusEnum.IN_PROGRESS.getCode())
+                    && !newStatus.equals(ActivityStatusEnum.CANCELLED.getCode())) {
+                throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "报名结束的活动只能转为进行中或已取消状态");
+            }
+        } else if (currentStatus.equals(ActivityStatusEnum.IN_PROGRESS.getCode())) {
+            if (!newStatus.equals(ActivityStatusEnum.ENDED.getCode())
+                    && !newStatus.equals(ActivityStatusEnum.CANCELLED.getCode())) {
+                throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "进行中的活动只能转为已结束或已取消状态");
+            }
+        } else if (currentStatus.equals(ActivityStatusEnum.ENDED.getCode())
+                || currentStatus.equals(ActivityStatusEnum.CANCELLED.getCode())) {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "已结束或已取消的活动无法修改状态");
+        } else {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "无效的活动状态");
         }
     }
 
@@ -460,7 +456,7 @@ public class ActivityServiceImpl implements ActivityService {
                 && now.isBefore(activity.getRegistrationEndTime());
         vo.setCanRegister(canRegister);
 
-        boolean canCancel = activity.getActivityStatus() < 2;
+        boolean canCancel = activity.getActivityStatus() < ActivityStatusEnum.REGISTRATION_ENDED.getCode();
         vo.setCanCancel(canCancel);
 
         // 获取访问次数（从 Redis 获取）
@@ -494,7 +490,7 @@ public class ActivityServiceImpl implements ActivityService {
         }
 
         LocalDateTime now = LocalDateTime.now();
-        boolean canRegister = activity.getActivityStatus() == 1
+        boolean canRegister = ActivityStatusEnum.REGISTERING.getCode().equals(activity.getActivityStatus())
                 && now.isAfter(activity.getRegistrationStartTime())
                 && now.isBefore(activity.getRegistrationEndTime());
         vo.setCanRegister(canRegister);

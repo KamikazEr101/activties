@@ -1,5 +1,6 @@
 package com.xidian.activities.task;
 
+import com.xidian.activities.common.enums.ActivityStatusEnum;
 import com.xidian.activities.entity.Activity;
 import com.xidian.activities.mapper.ActivityMapper;
 import com.xidian.activities.service.RedisService;
@@ -10,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,10 +47,11 @@ public class ActivityStatusTask {
             int updatedCount = 0;
 
             // 1. 报名中 → 报名结束：报名截止时间已过
-            List<Activity> registrationEndActivities = activityMapper.findActivitiesByStatus(1);
+            List<Activity> registrationEndActivities = activityMapper
+                    .findActivitiesByStatus(ActivityStatusEnum.REGISTERING.getCode());
             for (Activity activity : registrationEndActivities) {
                 if (activity.getRegistrationEndTime() != null && now.isAfter(activity.getRegistrationEndTime())) {
-                    activity.setActivityStatus(2);
+                    activity.setActivityStatus(ActivityStatusEnum.REGISTRATION_ENDED.getCode());
                     activity.setUpdateTime(now);
                     activityMapper.updateById(activity);
                     clearActivityCache(activity.getId());
@@ -58,10 +61,11 @@ public class ActivityStatusTask {
             }
 
             // 2. 报名结束 → 进行中：活动开始时间已到
-            List<Activity> startActivities = activityMapper.findActivitiesByStatus(2);
+            List<Activity> startActivities = activityMapper
+                    .findActivitiesByStatus(ActivityStatusEnum.REGISTRATION_ENDED.getCode());
             for (Activity activity : startActivities) {
                 if (activity.getStartTime() != null && !now.isBefore(activity.getStartTime())) {
-                    activity.setActivityStatus(3);
+                    activity.setActivityStatus(ActivityStatusEnum.IN_PROGRESS.getCode());
                     activity.setUpdateTime(now);
                     activityMapper.updateById(activity);
                     clearActivityCache(activity.getId());
@@ -71,10 +75,11 @@ public class ActivityStatusTask {
             }
 
             // 3. 进行中 → 已结束：活动结束时间已过
-            List<Activity> endActivities = activityMapper.findActivitiesByStatus(3);
+            List<Activity> endActivities = activityMapper
+                    .findActivitiesByStatus(ActivityStatusEnum.IN_PROGRESS.getCode());
             for (Activity activity : endActivities) {
                 if (activity.getEndTime() != null && now.isAfter(activity.getEndTime())) {
-                    activity.setActivityStatus(4);
+                    activity.setActivityStatus(ActivityStatusEnum.ENDED.getCode());
                     activity.setUpdateTime(now);
                     activityMapper.updateById(activity);
                     clearActivityCache(activity.getId());
@@ -99,8 +104,28 @@ public class ActivityStatusTask {
     public void cleanExpiredActivityCache() {
         try {
             log.info("开始清理过期活动缓存...");
-            // TODO: 清理Redis中已结束活动的缓存
-            log.info("过期活动缓存清理完成");
+            int clearedCount = 0;
+
+            // 获取已结束的活动
+            List<Activity> endedActivities = activityMapper.findActivitiesByStatus(ActivityStatusEnum.ENDED.getCode());
+            // 获取已取消的活动
+            List<Activity> cancelledActivities = activityMapper
+                    .findActivitiesByStatus(ActivityStatusEnum.CANCELLED.getCode());
+
+            List<Activity> allExpiredActivities = new ArrayList<>();
+            allExpiredActivities.addAll(endedActivities);
+            allExpiredActivities.addAll(cancelledActivities);
+
+            for (Activity activity : allExpiredActivities) {
+                // 检查缓存是否存在，如果存在则删除
+                String cacheKey = CacheConstants.ACTIVITY_CACHE + activity.getId();
+                if (redisService.hasKey(cacheKey)) {
+                    clearActivityCache(activity.getId());
+                    clearedCount++;
+                }
+            }
+
+            log.info("过期活动缓存清理完成，共清理{}个活动的缓存", clearedCount);
         } catch (Exception e) {
             log.error("清理过期活动缓存失败", e);
         }

@@ -19,7 +19,7 @@ public interface AdministratorMapper {
      * @param username 用户名
      * @return 管理员信息
      */
-    Administrator findByUsername(@Param("username") String username);
+    Administrator selectByUsername(@Param("username") String username);
 
     /**
      * 根据ID查询管理员

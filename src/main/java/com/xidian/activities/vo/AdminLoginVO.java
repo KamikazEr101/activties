@@ -1,8 +1,10 @@
 package com.xidian.activities.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 管理员登录响应VO
@@ -12,6 +14,8 @@ import lombok.Builder;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "管理员登录响应")
 public class AdminLoginVO {
 

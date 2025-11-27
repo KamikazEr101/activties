@@ -34,14 +34,12 @@
     <update id="updateById" parameterType="com.xidian.activities.entity.Administrator"> UPDATE
         administrators <set>
             <if test="realName != null">real_name = #{realName},</if>
-            <if test="email != null">email
-        = #{email},</if>
+            <if test="email != null">email = #{email},</if>
             <if test="phone != null">phone = #{phone},</if>
-            <if test="roleType != null">role_type
-        = #{roleType},</if>
+            <if test="roleType != null">role_type = #{roleType},</if>
             <if test="accountStatus != null">account_status = #{accountStatus},</if>
-            <if
-                test="password != null">password = #{password},</if> update_time = NOW() </set>
+            <if test="password != null">password = #{password},</if> 
+            update_time = NOW() </set>
         WHERE id = #{id} AND is_deleted = 0 </update>
 
     <!-- 软删除管理员 -->
@@ -67,8 +65,7 @@
         <if test="roleType != null"> AND role_type
         = #{roleType} </if>
         <if test="accountStatus != null"> AND account_status = #{accountStatus} </if>
-        <if
-            test="email != null and email != ''"> AND email LIKE CONCAT('%', #{email}, '%') </if>
+        <if test="email != null and email != ''"> AND email LIKE CONCAT('%', #{email}, '%') </if>
         ORDER BY create_time DESC </select>
 
     <!-- 更新最后登录时间 -->
@@ -87,9 +84,9 @@
         id != #{excludeId} </if>
     </select>
 
-    <!-- 修改密码 -->
+    <!-- 修改密码（已修复字段名：updated_time → update_time） -->
     <update id="changePassword" parameterType="map"> UPDATE administrators SET password =
-        #{newPassword}, updated_time = NOW() WHERE id = #{id} AND is_deleted = 0 </update>
+        #{newPassword}, update_time = NOW() WHERE id = #{id} AND is_deleted = 0 </update>
 
     <!-- 查询管理员总数 -->
     <select id="countByCondition" parameterType="com.xidian.activities.entity.Administrator"
@@ -99,10 +96,8 @@
         <if test="realName != null and realName != ''"> AND real_name LIKE CONCAT('%',
         #{realName}, '%') </if>
         <if test="roleType != null"> AND role_type = #{roleType} </if>
-        <if
-            test="accountStatus != null"> AND account_status = #{accountStatus} </if>
-        <if
-            test="email != null and email != ''"> AND email LIKE CONCAT('%', #{email}, '%') </if>
+        <if test="accountStatus != null"> AND account_status = #{accountStatus} </if>
+        <if test="email != null and email != ''"> AND email LIKE CONCAT('%', #{email}, '%') </if>
     </select>
 
     <!-- 批量更新账户状态 -->

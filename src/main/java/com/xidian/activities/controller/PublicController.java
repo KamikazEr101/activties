@@ -42,6 +42,14 @@ public class PublicController {
         // 只查询已发布且未取消的活动
         if (queryDTO.getActivityStatus() == null) {
             queryDTO.setActivityStatus(1); // 默认只查询报名中的活动
+        } else {
+            // 安全检查：不允许查询未发布(0)或已取消(5)的活动
+            Integer status = queryDTO.getActivityStatus();
+            if (status == 0 || status == 5) {
+                throw new com.xidian.activities.common.exception.BizException(
+                        com.xidian.activities.common.result.ResultCodeEnum.PARAM_ERROR,
+                        "无法查询未发布或已取消的活动");
+            }
         }
 
         log.info("公共查询活动列表: 页码{}, 页大小{}", queryDTO.getPageNum(), queryDTO.getPageSize());

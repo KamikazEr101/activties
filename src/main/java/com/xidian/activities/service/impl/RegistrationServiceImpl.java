@@ -2,6 +2,8 @@ package com.xidian.activities.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xidian.activities.common.enums.ActivityStatusEnum;
+import com.xidian.activities.common.enums.RegistrationStatusEnum;
 import com.xidian.activities.common.exception.BizException;
 import com.xidian.activities.common.result.ResultCodeEnum;
 import com.xidian.activities.dto.*;
@@ -61,14 +63,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public RegistrationVO registerActivity(RegistrationDTO registrationDTO) {
-        // 查询活动信息
-        Activity activity = activityMapper.selectById(registrationDTO.getActivityId());
+        // 查询活动信息并加锁（防止超卖）
+        // 注意：这里使用悲观锁，会阻塞其他事务对该活动的并发修改（如报名人数更新）
+        Activity activity = activityMapper.selectByIdForUpdate(registrationDTO.getActivityId());
         if (activity == null || activity.getIsDeleted() == 1) {
             throw BizException.of(ResultCodeEnum.ACTIVITY_NOT_FOUND);
         }
 
         // 验证活动状态
-        if (activity.getActivityStatus() != 1) {
+        if (!ActivityStatusEnum.REGISTERING.getCode().equals(activity.getActivityStatus())) {
             throw BizException.of(ResultCodeEnum.REGISTRATION_NOT_STARTED);
         }
 
@@ -89,7 +92,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             }
         }
 
-        // 检查重复报名
+        // 检查重复报名（虽然数据库有唯一索引，但为了用户体验，先查一次）
         if (registrationMapper.existsByActivityAndPhone(activity.getId(), registrationDTO.getStudentPhone())) {
             throw BizException.of(ResultCodeEnum.REGISTRATION_ALREADY_EXISTS);
         }
@@ -97,14 +100,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         // 创建报名记录
         Registration registration = new Registration();
         BeanUtils.copyProperties(registrationDTO, registration);
-        registration.setRegistrationStatus(1); // 报名成功
+        registration.setRegistrationStatus(RegistrationStatusEnum.SUCCESS.getCode()); // 报名成功
         registration.setCheckInStatus(0); // 未签到
         registration.setIsDeleted(0);
         registration.setCreateTime(LocalDateTime.now());
         registration.setUpdateTime(LocalDateTime.now());
 
         // 保存报名记录
-        registrationMapper.insert(registration);
+        try {
+            registrationMapper.insert(registration);
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            // 捕获数据库唯一索引冲突异常
+            throw BizException.of(ResultCodeEnum.REGISTRATION_ALREADY_EXISTS);
+        }
 
         // 清理该活动的报名列表缓存
         clearRegistrationListCache(activity.getId());

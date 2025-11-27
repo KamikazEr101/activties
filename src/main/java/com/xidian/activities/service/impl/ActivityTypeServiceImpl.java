@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +36,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
     private ActivityTypeMapper activityTypeMapper;
 
     @Override
+    @Transactional
     public ActivityTypeVO createActivityType(ActivityTypeCreateDTO createDTO) {
         // 检查类型编码是否已存在
         if (activityTypeMapper.checkTypeCodeExists(createDTO.getTypeCode(), null) > 0) {
@@ -63,6 +65,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
     }
 
     @Override
+    @Transactional
     public ActivityTypeVO updateActivityType(Long typeId, ActivityTypeUpdateDTO updateDTO) {
         // 检查活动类型是否存在
         ActivityType existingType = activityTypeMapper.selectById(typeId);
@@ -102,6 +105,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
     }
 
     @Override
+    @Transactional
     public void deleteActivityType(Long typeId) {
         // 检查活动类型是否存在
         ActivityType existingType = activityTypeMapper.selectById(typeId);
@@ -161,6 +165,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
     }
 
     @Override
+    @Transactional
     public Integer batchDeleteActivityTypes(List<Long> typeIds) {
         if (typeIds == null || typeIds.isEmpty()) {
             return 0;

@@ -33,12 +33,20 @@ public interface ActivityMapper {
     Activity selectById(@Param("id") Long id);
 
     /**
+     * 根据ID查询活动并加锁（悲观锁）
+     *
+     * @param id 活动ID
+     * @return 活动信息
+     */
+    Activity selectByIdForUpdate(@Param("id") Long id);
+
+    /**
      * 根据条件查询活动列表
      *
      * @param queryDTO 查询条件
      * @return 活动列表
      */
-    List<Activity> selectByConditions(ActivityQueryDTO queryDTO);
+    List<Activity> selectList(ActivityQueryDTO queryDTO);
 
     /**
      * 更新活动

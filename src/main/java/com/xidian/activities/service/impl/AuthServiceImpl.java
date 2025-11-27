@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
@@ -41,9 +42,10 @@ public class AuthServiceImpl implements AuthService {
     private RedisService redisService;
 
     @Override
+    @Transactional
     public AdminLoginVO login(AdminLoginDTO loginDTO) {
         // 根据用户名查询管理员
-        Administrator administrator = administratorMapper.findByUsername(loginDTO.getUsername());
+        Administrator administrator = administratorMapper.selectByUsername(loginDTO.getUsername());
         if (administrator == null) {
             throw new BizException(ResultCodeEnum.ADMIN_ACCOUNT_NOT_EXIST_ERROR);
         }
