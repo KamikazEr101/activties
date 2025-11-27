@@ -24,29 +24,9 @@ public interface CacheConstants {
     String ACTIVITY_LIST_CACHE = CACHE_NAMESPACE + "activity:list:";
 
     /**
-     * 活动类型缓存
-     */
-    String ACTIVITY_TYPE_CACHE = CACHE_NAMESPACE + "activity_type:";
-
-    /**
-     * 活动类型列表缓存
-     */
-    String ACTIVITY_TYPE_LIST_CACHE = CACHE_NAMESPACE + "activity_type:list:";
-
-    /**
      * 管理员缓存
      */
     String ADMIN_CACHE = CACHE_NAMESPACE + "admin:";
-
-    /**
-     * 报名记录缓存
-     */
-    String REGISTRATION_CACHE = CACHE_NAMESPACE + "registration:";
-
-    /**
-     * 活动报名列表缓存
-     */
-    String REGISTRATION_LIST_CACHE = CACHE_NAMESPACE + "registration:list:";
 
     /**
      * 用户Token缓存

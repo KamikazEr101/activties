@@ -26,6 +26,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/admin/login", // 登录接口
                         "/public/**", // 公共接口
+                        "/h5/**", // H5移动端签到页面（使用checkInToken验证）
                         "/doc.html", // Knife4j文档
                         "/swagger-ui.html", // Swagger UI首页
                         "/swagger-ui/**", // Swagger UI资源

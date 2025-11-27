@@ -87,7 +87,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 activity.setActivityStatus(ActivityStatusEnum.REGISTRATION_ENDED.getCode());
                 activity.setUpdateTime(now);
                 activityMapper.updateById(activity);
-                clearRegistrationListCache(activity.getId());
+                clearActivityCacheAfterRegistrationChange(activity.getId());
             }
             throw BizException.of(ResultCodeEnum.REGISTRATION_ENDED);
         }
@@ -123,7 +123,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         // 清理该活动的报名列表缓存
-        clearRegistrationListCache(activity.getId());
+        clearActivityCacheAfterRegistrationChange(activity.getId());
 
         log.info("学生 {} 报名活动成功: {}", registration.getStudentPhone(), activity.getActivityName());
 
@@ -155,7 +155,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         registrationMapper.updateById(registration);
 
         // 清理该活动的报名列表缓存
-        clearRegistrationListCache(activity.getId());
+        clearActivityCacheAfterRegistrationChange(activity.getId());
 
         log.info("学生 {} 取消报名活动: {}", registration.getStudentPhone(), activity.getActivityName());
 
@@ -209,7 +209,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 activity.setActivityStatus(ActivityStatusEnum.ENDED.getCode());
                 activity.setUpdateTime(now);
                 activityMapper.updateById(activity);
-                clearRegistrationListCache(activity.getId());
+                clearActivityCacheAfterRegistrationChange(activity.getId());
             }
             throw BizException.of(ResultCodeEnum.CHECKIN_ACTIVITY_ENDED);
         }
@@ -221,7 +221,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         registrationMapper.updateById(registration);
 
         // 清理该活动的报名列表缓存
-        clearRegistrationListCache(activity.getId());
+        clearActivityCacheAfterRegistrationChange(activity.getId());
 
         log.info("学生 {} 签到活动成功: {}", registration.getStudentPhone(), activity.getActivityName());
 
@@ -229,23 +229,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public PageInfo<RegistrationVO> getRegistrationList(RegistrationQueryDTO queryDTO) {
-        // 生成缓存key（基于查询条件）
-        String cacheKey = generateRegistrationListCacheKey(queryDTO);
-
-        // 先从缓存获取
-        try {
-            Object cached = redisService.get(cacheKey);
-            if (cached != null && cached instanceof PageInfo) {
-                log.info("从缓存获取报名列表: cacheKey = {}", cacheKey);
-                return (PageInfo<RegistrationVO>) cached;
-            }
-        } catch (Exception e) {
-            log.warn("从缓存获取报名列表失败: cacheKey = {}, error = {}", cacheKey, e.getMessage());
-        }
-
-        // 缓存未命中，查询数据库
+        // 直接查询数据库
         PageHelper.startPage(queryDTO.getPageNum(), queryDTO.getPageSize());
         List<Registration> registrationList = registrationMapper.selectByConditions(queryDTO);
 
@@ -257,15 +242,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .collect(Collectors.toList());
 
         PageInfo<RegistrationVO> pageInfo = new PageInfo<>(voList);
-
-        // 写入缓存（5分钟过期，报名数据变化频繁）
-        try {
-            redisService.set(cacheKey, pageInfo, CacheConstants.SHORT_EXPIRE_TIME,
-                    java.util.concurrent.TimeUnit.SECONDS);
-            log.info("报名列表写入缓存: cacheKey = {}", cacheKey);
-        } catch (Exception e) {
-            log.error("报名列表写入缓存失败: cacheKey = {}, error = {}", cacheKey, e.getMessage());
-        }
 
         return pageInfo;
     }
@@ -411,7 +387,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 activity.setActivityStatus(ActivityStatusEnum.ENDED.getCode());
                 activity.setUpdateTime(now);
                 activityMapper.updateById(activity);
-                clearRegistrationListCache(activity.getId());
+                clearActivityCacheAfterRegistrationChange(activity.getId());
             }
             throw BizException.of(ResultCodeEnum.CHECKIN_ACTIVITY_ENDED);
         }
@@ -475,13 +451,9 @@ public class RegistrationServiceImpl implements RegistrationService {
      * 清理报名列表缓存
      * 同时清理活动缓存，因为报名人数变化会影响活动详情和列表
      */
-    private void clearRegistrationListCache(Long activityId) {
+    private void clearActivityCacheAfterRegistrationChange(Long activityId) {
         try {
-            // 1. 清理该活动的所有报名列表缓存
-            String cachePrefix = CacheConstants.REGISTRATION_LIST_CACHE + activityId;
-            redisService.deleteByPrefix(cachePrefix);
-
-            // 2. 清理活动详情缓存（更新剩余名额）
+            // 1. 清理活动详情缓存（更新剩余名额）
             String activityDetailKey = CacheConstants.ACTIVITY_CACHE + activityId;
             redisService.delete(activityDetailKey);
 
@@ -492,47 +464,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         } catch (Exception e) {
             log.error("清理缓存失败: activityId = {}, error = {}", activityId, e.getMessage());
         }
-    }
-
-    /**
-     * 生成报名列表缓存key
-     */
-    private String generateRegistrationListCacheKey(RegistrationQueryDTO queryDTO) {
-        // 基于查询条件生成缓存key
-        StringBuilder keyBuilder = new StringBuilder(CacheConstants.REGISTRATION_LIST_CACHE);
-
-        // 活动ID是必须的，作为第一级key
-        if (queryDTO.getActivityId() != null) {
-            keyBuilder.append(queryDTO.getActivityId());
-        } else {
-            keyBuilder.append("all");
-        }
-
-        // 分页参数
-        keyBuilder.append(":page:").append(queryDTO.getPageNum())
-                .append(":size:").append(queryDTO.getPageSize());
-
-        // 筛选条件
-        if (queryDTO.getStudentName() != null && !queryDTO.getStudentName().isEmpty()) {
-            keyBuilder.append(":name:").append(queryDTO.getStudentName());
-        }
-        if (queryDTO.getStudentPhone() != null && !queryDTO.getStudentPhone().isEmpty()) {
-            keyBuilder.append(":phone:").append(queryDTO.getStudentPhone());
-        }
-        if (queryDTO.getStudentCollege() != null && !queryDTO.getStudentCollege().isEmpty()) {
-            keyBuilder.append(":college:").append(queryDTO.getStudentCollege());
-        }
-        if (queryDTO.getRegistrationStatus() != null) {
-            keyBuilder.append(":regStatus:").append(queryDTO.getRegistrationStatus());
-        }
-        if (queryDTO.getCheckInStatus() != null) {
-            keyBuilder.append(":checkStatus:").append(queryDTO.getCheckInStatus());
-        }
-        if (queryDTO.getSortBy() != null) {
-            keyBuilder.append(":sort:").append(queryDTO.getSortBy())
-                    .append(":").append(queryDTO.getSortOrder() != null ? queryDTO.getSortOrder() : "DESC");
-        }
-
-        return keyBuilder.toString();
     }
 }
