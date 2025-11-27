@@ -81,6 +81,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw BizException.of(ResultCodeEnum.REGISTRATION_NOT_STARTED);
         }
         if (now.isAfter(activity.getRegistrationEndTime())) {
+            // 惰性更新：如果当前时间已过报名截止时间，但状态仍为报名中，则更新状态
+            if (ActivityStatusEnum.REGISTERING.getCode().equals(activity.getActivityStatus())) {
+                log.info("触发惰性更新(报名): 活动[{}] 报名截止时间已过，更新状态为报名结束", activity.getId());
+                activity.setActivityStatus(ActivityStatusEnum.REGISTRATION_ENDED.getCode());
+                activity.setUpdateTime(now);
+                activityMapper.updateById(activity);
+                clearRegistrationListCache(activity.getId());
+            }
             throw BizException.of(ResultCodeEnum.REGISTRATION_ENDED);
         }
 
@@ -194,6 +202,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw BizException.of(ResultCodeEnum.CHECKIN_ACTIVITY_NOT_STARTED);
         }
         if (now.isAfter(checkInEndTime)) {
+            // 惰性更新：如果当前时间已过签到截止时间（活动结束+1小时），但状态仍未结束，则更新状态
+            if (!ActivityStatusEnum.ENDED.getCode().equals(activity.getActivityStatus())
+                    && !ActivityStatusEnum.CANCELLED.getCode().equals(activity.getActivityStatus())) {
+                log.info("触发惰性更新(签到截止): 活动[{}] 签到截止时间已过，更新状态为已结束", activity.getId());
+                activity.setActivityStatus(ActivityStatusEnum.ENDED.getCode());
+                activity.setUpdateTime(now);
+                activityMapper.updateById(activity);
+                clearRegistrationListCache(activity.getId());
+            }
             throw BizException.of(ResultCodeEnum.CHECKIN_ACTIVITY_ENDED);
         }
 
@@ -387,6 +404,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw BizException.of(ResultCodeEnum.CHECKIN_ACTIVITY_NOT_STARTED);
         }
         if (now.isAfter(checkInEndTime)) {
+            // 惰性更新：如果当前时间已过签到截止时间（活动结束+1小时），但状态仍未结束，则更新状态
+            if (!ActivityStatusEnum.ENDED.getCode().equals(activity.getActivityStatus())
+                    && !ActivityStatusEnum.CANCELLED.getCode().equals(activity.getActivityStatus())) {
+                log.info("触发惰性更新(签到截止): 活动[{}] 签到截止时间已过，更新状态为已结束", activity.getId());
+                activity.setActivityStatus(ActivityStatusEnum.ENDED.getCode());
+                activity.setUpdateTime(now);
+                activityMapper.updateById(activity);
+                clearRegistrationListCache(activity.getId());
+            }
             throw BizException.of(ResultCodeEnum.CHECKIN_ACTIVITY_ENDED);
         }
 
@@ -447,15 +473,24 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     /**
      * 清理报名列表缓存
+     * 同时清理活动缓存，因为报名人数变化会影响活动详情和列表
      */
     private void clearRegistrationListCache(Long activityId) {
         try {
-            // 清理该活动的所有报名列表缓存（使用前缀匹配删除）
+            // 1. 清理该活动的所有报名列表缓存
             String cachePrefix = CacheConstants.REGISTRATION_LIST_CACHE + activityId;
-            Long deletedCount = redisService.deleteByPrefix(cachePrefix);
-            log.info("清理报名列表缓存: activityId = {}, 清理缓存数量 = {}", activityId, deletedCount);
+            redisService.deleteByPrefix(cachePrefix);
+
+            // 2. 清理活动详情缓存（更新剩余名额）
+            String activityDetailKey = CacheConstants.ACTIVITY_CACHE + activityId;
+            redisService.delete(activityDetailKey);
+
+            // 3. 清理活动列表缓存（更新报名进度）
+            redisService.deleteByPrefix(CacheConstants.ACTIVITY_LIST_CACHE);
+
+            log.info("清理缓存完成: activityId = {}", activityId);
         } catch (Exception e) {
-            log.error("清理报名列表缓存失败: activityId = {}, error = {}", activityId, e.getMessage());
+            log.error("清理缓存失败: activityId = {}, error = {}", activityId, e.getMessage());
         }
     }
 

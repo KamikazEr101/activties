@@ -161,6 +161,10 @@ public class ActivityStatusTask {
         try {
             String detailCacheKey = CacheConstants.ACTIVITY_CACHE + activityId;
             redisService.delete(detailCacheKey);
+
+            // 同时清理活动列表缓存，因为状态变更会影响列表显示
+            redisService.deleteByPrefix(CacheConstants.ACTIVITY_LIST_CACHE);
+
             log.debug("定时任务清理活动缓存: activityId = {}", activityId);
         } catch (Exception e) {
             log.error("定时任务清理活动缓存失败: activityId = {}, error = {}", activityId, e.getMessage());

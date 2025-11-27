@@ -86,6 +86,9 @@ public class ActivityServiceImpl implements ActivityService {
         // 保存活动
         activityMapper.insert(activity);
 
+        // 清理缓存（新增活动后，列表缓存需要更新）
+        clearActivityCache(activity.getId());
+
         log.info("管理员 {} 创建活动成功: {}", adminId, activity.getActivityName());
 
         return convertToDetailVO(activity);
@@ -112,14 +115,24 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ADMIN_ACCESS_FORBIDDEN);
         }
 
-        // 检查时间限制：报名开始后不能修改关键信息
+        // 检查时间限制：报名开始后不能修改任何信息
+        // 特例：如果活动还未发布，即使时间过了也可以修改（为了修正错误的时间）
         LocalDateTime now = LocalDateTime.now();
-        if (activity.getRegistrationStartTime() != null && now.isAfter(activity.getRegistrationStartTime())) {
+        if (activity.getActivityStatus() != ActivityStatusEnum.UNRELEASED.getCode()
+                && activity.getRegistrationStartTime() != null
+                && now.isAfter(activity.getRegistrationStartTime())) {
             throw BizException.of(ResultCodeEnum.ACTIVITY_REGISTRATION_STARTED);
         }
 
         // 更新活动信息
         BeanUtils.copyProperties(updateDTO, activity, "id", "creatorId", "createTime", "isDeleted");
+
+        // 如果活动已发布，需要根据新的时间重新计算状态
+        if (activity.getActivityStatus() != ActivityStatusEnum.UNRELEASED.getCode()
+                && activity.getActivityStatus() != ActivityStatusEnum.CANCELLED.getCode()) {
+            recalculateActivityStatus(activity);
+        }
+
         activity.setUpdateTime(LocalDateTime.now());
 
         activityMapper.updateById(activity);
@@ -150,7 +163,11 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ADMIN_ACCESS_FORBIDDEN);
         }
 
-        if (activity.getActivityStatus() >= ActivityStatusEnum.REGISTERING.getCode()) {
+        // 允许删除的状态：未发布(0)、已结束(4)、已取消(5)
+        // 不允许删除的状态：报名中(1)、报名结束(2)、进行中(3)
+        if (activity.getActivityStatus() == ActivityStatusEnum.REGISTERING.getCode()
+                || activity.getActivityStatus() == ActivityStatusEnum.REGISTRATION_ENDED.getCode()
+                || activity.getActivityStatus() == ActivityStatusEnum.IN_PROGRESS.getCode()) {
             throw BizException.of(ResultCodeEnum.ACTIVITY_NOT_DELETABLE);
         }
 
@@ -425,6 +442,37 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "已结束或已取消的活动无法修改状态");
         } else {
             throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "无效的活动状态");
+        }
+    }
+
+    /**
+     * 根据当前时间和活动时间重新计算活动状态
+     */
+    private void recalculateActivityStatus(Activity activity) {
+        LocalDateTime now = LocalDateTime.now();
+
+        // 如果活动已取消或未发布，不重新计算
+        if (activity.getActivityStatus() == ActivityStatusEnum.UNRELEASED.getCode()
+                || activity.getActivityStatus() == ActivityStatusEnum.CANCELLED.getCode()) {
+            return;
+        }
+
+        int newStatus;
+        if (now.isAfter(activity.getEndTime())) {
+            newStatus = ActivityStatusEnum.ENDED.getCode(); // 已结束
+        } else if (now.isAfter(activity.getStartTime())) {
+            newStatus = ActivityStatusEnum.IN_PROGRESS.getCode(); // 进行中
+        } else if (now.isAfter(activity.getRegistrationEndTime())) {
+            newStatus = ActivityStatusEnum.REGISTRATION_ENDED.getCode(); // 报名结束
+        } else {
+            newStatus = ActivityStatusEnum.REGISTERING.getCode(); // 报名中
+        }
+
+        // 只有状态发生变化时才更新
+        if (activity.getActivityStatus() != newStatus) {
+            log.info("活动[{}]状态因时间变更自动调整: {} -> {}",
+                    activity.getId(), activity.getActivityStatus(), newStatus);
+            activity.setActivityStatus(newStatus);
         }
     }
 

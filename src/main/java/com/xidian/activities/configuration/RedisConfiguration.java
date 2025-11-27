@@ -1,5 +1,10 @@
 package com.xidian.activities.configuration;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +38,15 @@ public class RedisConfiguration {
         template.setConnectionFactory(connectionFactory);
 
         // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        // 解决jackson2无法反序列化LocalDateTime的问题
+        objectMapper.registerModule(new JavaTimeModule());
+        // 启用默认类型，以便在反序列化时知道具体的类
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
+
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(
+                objectMapper, Object.class);
 
         // 使用StringRedisSerializer来序列化和反序列化redis的key值
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
@@ -56,10 +69,20 @@ public class RedisConfiguration {
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         // 配置序列化
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
+
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(
+                objectMapper, Object.class);
+
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(30)) // 默认30分钟过期
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(Object.class)))
+                .serializeKeysWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
                 .disableCachingNullValues(); // 不缓存空值
 
         return RedisCacheManager.builder(connectionFactory)
