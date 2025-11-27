@@ -117,11 +117,11 @@ INSERT INTO `activity_types` (`type_code`, `type_name`, `sort_order`) VALUES
 
 -- 2. 创建默认管理员账号
 -- 密码原文均为: admin123
--- BCrypt加密后的值为: $2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi
+-- BCrypt加密后的值为: $2a$12$uNJADi4NGnO39JIAMT6D1OVmhD9Q93DGYH/d.HFaeaEvnk3tToVFW
 INSERT INTO `administrators` (`id`, `username`, `password`, `real_name`, `phone`, `email`, `role_type`, `account_status`)
 VALUES
-(1, 'superadmin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi', '超级管理员', '13800138000', 'super@example.com', 2, 1),
-(2, 'admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVKIUi', '活动管理员', '13800138001', 'admin@example.com', 1, 1);
+(1, 'superadmin', '$2a$12$uNJADi4NGnO39JIAMT6D1OVmhD9Q93DGYH/d.HFaeaEvnk3tToVFW', '超级管理员', '13800138000', 'super@example.com', 2, 1),
+(2, 'admin', '$2a$12$uNJADi4NGnO39JIAMT6D1OVmhD9Q93DGYH/d.HFaeaEvnk3tToVFW', '活动管理员', '13800138001', 'admin@example.com', 1, 1);
 
 -- 3. 初始化活动示例数据
 -- 注意：以下日期可能需要根据当前时间进行调整以保证状态的合理性。
