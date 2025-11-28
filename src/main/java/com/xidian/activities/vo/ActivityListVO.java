@@ -60,6 +60,9 @@ public class ActivityListVO {
     @Schema(description = "当前报名人数", example = "150")
     private Integer currentRegistrationCount;
 
+    @Schema(description = "报名开始时间")
+    private LocalDateTime registrationStartTime;
+
     @Schema(description = "报名截止时间")
     private LocalDateTime registrationEndTime;
 

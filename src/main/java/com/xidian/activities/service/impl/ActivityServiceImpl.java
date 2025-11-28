@@ -122,23 +122,85 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ADMIN_ACCESS_FORBIDDEN);
         }
 
-        // 检查时间限制：报名开始后不能修改任何信息
-        // 特例：如果活动还未发布，即使时间过了也可以修改（为了修正错误的时间）
         LocalDateTime now = LocalDateTime.now();
-        if (activity.getActivityStatus() != ActivityStatusEnum.UNRELEASED.getCode()
-                && activity.getRegistrationStartTime() != null
-                && now.isAfter(activity.getRegistrationStartTime())) {
-            throw BizException.of(ResultCodeEnum.ACTIVITY_REGISTRATION_STARTED);
+
+        // 填充未传递的时间字段（用于后续校验和比较）
+        if (updateDTO.getStartTime() == null) {
+            updateDTO.setStartTime(activity.getStartTime());
+        }
+        if (updateDTO.getRegistrationStartTime() == null) {
+            updateDTO.setRegistrationStartTime(activity.getRegistrationStartTime());
+        }
+        if (updateDTO.getEndTime() == null) {
+            updateDTO.setEndTime(activity.getEndTime());
+        }
+        if (updateDTO.getRegistrationEndTime() == null) {
+            updateDTO.setRegistrationEndTime(activity.getRegistrationEndTime());
+        }
+
+        validateActivityTime(updateDTO);
+
+        // 已发布
+        if (activity.getActivityStatus() != ActivityStatusEnum.UNRELEASED.getCode()) {
+            // 报名开始前
+            if (activity.getActivityStatus() == ActivityStatusEnum.REGISTERING.getCode() && now.isBefore(
+                    activity.getRegistrationStartTime())) {
+                if (!updateDTO.getRegistrationStartTime().isAfter(now)) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名开始时间必须在当前时间之后");
+                }
+            }
+            // 报名进行中
+            if (activity.getActivityStatus() == ActivityStatusEnum.REGISTERING.getCode() && now.isAfter(
+                    activity.getRegistrationStartTime()) && now.isBefore(activity.getRegistrationEndTime())) {
+                if (!activity.getRegistrationStartTime().equals(updateDTO.getRegistrationStartTime())) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名开始时间不能修改");
+                }
+                if (!updateDTO.getRegistrationEndTime().isAfter(now)) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名结束时间必须在当前时间之后");
+                }
+            }
+            // 报名结束，活动开始前
+            if (activity.getActivityStatus() == ActivityStatusEnum.REGISTRATION_ENDED.getCode() && now.isAfter(
+                    activity.getRegistrationEndTime()) && now.isBefore(activity.getStartTime())) {
+                if ((!activity.getRegistrationEndTime().equals(updateDTO.getRegistrationEndTime()))
+                        || (!activity.getRegistrationStartTime().equals(updateDTO.getRegistrationStartTime()))) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名开始/结束时间不能修改");
+                }
+                if (!updateDTO.getStartTime().isAfter(now)) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "活动开始时间必须在当前时间之后");
+                }
+            }
+            // 活动进行中
+            if (activity.getActivityStatus() == ActivityStatusEnum.IN_PROGRESS.getCode()
+                    && now.isAfter(activity.getStartTime()) && now.isBefore(activity.getEndTime())) {
+                if (!activity.getStartTime().equals(updateDTO.getStartTime())) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "活动开始时间不能修改");
+                }
+                if (!updateDTO.getEndTime().isAfter(now)) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "活动结束时间必须在当前时间之后");
+                }
+                if ((!activity.getRegistrationEndTime().equals(updateDTO.getRegistrationEndTime()))
+                        || (!activity.getRegistrationStartTime().equals(updateDTO.getRegistrationStartTime()))) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名开始/结束时间不能修改");
+                }
+            }
+            // 活动结束
+            if (activity.getActivityStatus() == ActivityStatusEnum.ENDED.getCode()) {
+                // 任意时间都不许修改
+                Boolean registrationStartTimeChanged = !activity.getRegistrationStartTime()
+                        .equals(updateDTO.getRegistrationStartTime());
+                Boolean registrationEndTimeChanged = !activity.getRegistrationEndTime()
+                        .equals(updateDTO.getRegistrationEndTime());
+                Boolean startTimeChanged = !activity.getStartTime().equals(updateDTO.getStartTime());
+                Boolean endTimeChanged = !activity.getEndTime().equals(updateDTO.getEndTime());
+                if (registrationStartTimeChanged || registrationEndTimeChanged || startTimeChanged || endTimeChanged) {
+                    throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "活动结束，无法修改时间");
+                }
+            }
         }
 
         // 更新活动信息
         BeanUtils.copyProperties(updateDTO, activity, "id", "creatorId", "createTime", "isDeleted");
-
-        // 如果活动已发布，需要根据新的时间重新计算状态
-        if (activity.getActivityStatus() != ActivityStatusEnum.UNRELEASED.getCode()
-                && activity.getActivityStatus() != ActivityStatusEnum.CANCELLED.getCode()) {
-            recalculateActivityStatus(activity);
-        }
 
         activity.setUpdateTime(LocalDateTime.now());
 
@@ -360,6 +422,40 @@ public class ActivityServiceImpl implements ActivityService {
         }
     }
 
+    private void validateActivityTime(ActivityUpdateDTO updateDTO) {
+        // 活动结束时间必须晚于开始时间
+        if (updateDTO.getStartTime().isAfter(updateDTO.getEndTime())) {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "活动结束时间必须晚于开始时间");
+        }
+
+        // 报名截止时间必须晚于报名开始时间
+        if (updateDTO.getRegistrationStartTime().isAfter(updateDTO.getRegistrationEndTime())) {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名截止时间必须晚于报名开始时间");
+        }
+
+        // 报名截止时间不能晚于活动开始时间
+        if (updateDTO.getRegistrationEndTime().isAfter(updateDTO.getStartTime())) {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名截止时间不能晚于活动开始时间");
+        }
+    }
+
+    private void validateActivityTime(Activity activity) {
+        // 活动结束时间必须晚于开始时间
+        if (activity.getStartTime().isAfter(activity.getEndTime())) {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "活动结束时间必须晚于开始时间");
+        }
+
+        // 报名截止时间必须晚于报名开始时间
+        if (activity.getRegistrationStartTime().isAfter(activity.getRegistrationEndTime())) {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名截止时间必须晚于报名开始时间");
+        }
+
+        // 报名截止时间不能晚于活动开始时间
+        if (activity.getRegistrationEndTime().isAfter(activity.getStartTime())) {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名截止时间不能晚于活动开始时间");
+        }
+    }
+
     /**
      * 验证活动信息完整性（发布前检查）
      */
@@ -422,21 +518,10 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ACTIVITY_INFO_INCOMPLETE, finalMsg);
         }
 
-        // 验证时间的合理性（如果所有时间都不为空）
+        // 验证时间的合理性（报名开始时间必须在当前时间之后）
         if (activity.getStartTime() != null && activity.getEndTime() != null
                 && activity.getRegistrationStartTime() != null && activity.getRegistrationEndTime() != null) {
-
-            if (activity.getStartTime().isAfter(activity.getEndTime())) {
-                throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "活动结束时间必须晚于开始时间");
-            }
-
-            if (activity.getRegistrationStartTime().isAfter(activity.getRegistrationEndTime())) {
-                throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名截止时间必须晚于报名开始时间");
-            }
-
-            if (activity.getRegistrationEndTime().isAfter(activity.getStartTime())) {
-                throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名截止时间不能晚于活动开始时间");
-            }
+            validateActivityTime(activity);
         }
     }
 
@@ -535,6 +620,14 @@ public class ActivityServiceImpl implements ActivityService {
         Long viewCount = getViewCount(activity.getId());
         vo.setViewCount(viewCount);
 
+        if (activity.getRegistrationStartTime() != null) {
+            vo.setRegistrationStartTime(activity.getRegistrationStartTime());
+        }
+
+        if (activity.getRegistrationEndTime() != null) {
+            vo.setRegistrationEndTime(activity.getRegistrationEndTime());
+        }
+
         return vo;
     }
 
@@ -566,6 +659,14 @@ public class ActivityServiceImpl implements ActivityService {
                 && now.isAfter(activity.getRegistrationStartTime())
                 && now.isBefore(activity.getRegistrationEndTime());
         vo.setCanRegister(canRegister);
+
+        if (activity.getRegistrationStartTime() != null) {
+            vo.setRegistrationStartTime(activity.getRegistrationStartTime());
+        }
+
+        if (activity.getRegistrationEndTime() != null) {
+            vo.setRegistrationEndTime(activity.getRegistrationEndTime());
+        }
 
         return vo;
     }
