@@ -191,4 +191,8 @@
             test="activityId != null"> AND activity_id = #{activityId} </if>
     </select>
 
+    <!-- 根据手机号和姓名查询报名记录 -->
+    <select id="selectByPhoneAndName" resultMap="BaseResultMap"> SELECT <include
+            refid="Base_Column_List" /> FROM registrations WHERE student_phone = #{studentPhone} AND
+        student_name = #{studentName} AND is_deleted = 0 </select>
 </mapper>

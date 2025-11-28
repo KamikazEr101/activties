@@ -465,4 +465,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             log.error("清理缓存失败: activityId = {}, error = {}", activityId, e.getMessage());
         }
     }
+
+    @Override
+    public List<RegistrationVO> getStudentRegistrationRecordsByPhoneAndName(String studentPhone, String studentName) {
+        return registrationMapper.selectByPhoneAndName(studentPhone, studentName);
+    }
 }

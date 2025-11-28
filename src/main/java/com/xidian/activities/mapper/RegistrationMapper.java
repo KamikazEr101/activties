@@ -2,6 +2,8 @@ package com.xidian.activities.mapper;
 
 import com.xidian.activities.dto.RegistrationQueryDTO;
 import com.xidian.activities.entity.Registration;
+import com.xidian.activities.vo.RegistrationVO;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -91,4 +93,7 @@ public interface RegistrationMapper {
          */
         Registration findByActivityAndPhone(@Param("activityId") Long activityId,
                         @Param("studentPhone") String studentPhone);
-}
+
+        List<RegistrationVO> selectByPhoneAndName(@Param("studentPhone") String studentPhone,
+                        @Param("studentName") String studentName);
+}       

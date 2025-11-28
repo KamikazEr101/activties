@@ -1,5 +1,7 @@
 package com.xidian.activities.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.xidian.activities.dto.*;
 import com.xidian.activities.vo.*;
@@ -128,4 +130,13 @@ public interface RegistrationService {
             this.failedPhones = failedPhones;
         }
     }
+
+    /**
+     * 根据手机号和姓名获取学生报名记录
+     *
+     * @param studentPhone 学生手机号
+     * @param studentName 学生姓名
+     * @return 报名记录列表
+     */
+    List<RegistrationVO> getStudentRegistrationRecordsByPhoneAndName(String studentPhone, String studentName);
 }

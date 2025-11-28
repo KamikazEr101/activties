@@ -144,4 +144,17 @@ public class RegistrationController {
 
         return Result.ok(statistics);
     }
+
+    @GetMapping("/student")
+    @Operation(summary = "获取学生报名记录", description = "根据学生手机号获取报名记录")
+    public Result<List<RegistrationVO>> getStudentRegistrationRecords(
+            @Parameter(description = "学生手机号", required = true) @RequestParam String studentPhone,
+            @Parameter(description = "学生姓名", required = true) @RequestParam String studentName) {
+
+        log.info("获取学生报名记录请求: 手机号{}", studentPhone);
+        List<RegistrationVO> records = registrationService.getStudentRegistrationRecordsByPhoneAndName(studentPhone, studentName);
+        log.info("学生报名记录查询成功: 手机号{}, 记录数{}", studentPhone, records.size());
+
+        return Result.ok(records);
+    }
 }
