@@ -1,6 +1,7 @@
 package com.xidian.activities.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Future;
@@ -55,7 +56,7 @@ public class ActivityUpdateDTO {
     @Schema(description = "负责人姓名", example = "王老师")
     private String contactPerson;
 
-    @Size(max = 20, message = "联系电话长度不能超过20字符")
+    @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
     @Schema(description = "联系电话", example = "13812345678")
     private String contactPhone;
 
