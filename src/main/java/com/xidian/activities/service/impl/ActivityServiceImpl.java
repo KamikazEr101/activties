@@ -21,6 +21,7 @@ import com.xidian.activities.vo.ActivityListVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +52,12 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private com.xidian.activities.util.MinioUtil minioUtil;
+
+    @Value("${minio.bucket-name:activities}")
+    private String bucketName;
 
     // 活动状态映射
     private static final Map<Integer, String> ACTIVITY_STATUS_MAP = Arrays.stream(ActivityStatusEnum.values())
@@ -174,6 +181,23 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setIsDeleted(1);
         activity.setUpdateTime(LocalDateTime.now());
         activityMapper.updateById(activity);
+
+        // 如果活动有海报，删除MinIO中的文件
+        if (activity.getPosterUrl() != null && !activity.getPosterUrl().isEmpty()) {
+            try {
+                // 从URL中解析出objectName
+                // URL格式：http://localhost:9000/activities/posters/xxx.jpg
+                String objectName = extractObjectNameFromUrl(activity.getPosterUrl());
+                if (objectName != null) {
+                    minioUtil.removeObject(bucketName, objectName);
+                    log.info("删除活动海报文件成功: activityId={}, file={}", activityId, objectName);
+                }
+            } catch (Exception e) {
+                // 文件删除失败不影响活动删除，只记录日志
+                log.warn("删除活动海报文件失败: activityId={}, posterUrl={}, error={}",
+                        activityId, activity.getPosterUrl(), e.getMessage());
+            }
+        }
 
         // 清理缓存
         clearActivityCache(activity.getId());
@@ -625,5 +649,40 @@ public class ActivityServiceImpl implements ActivityService {
             log.warn("获取活动访问次数失败: activityId = {}, error = {}", activityId, e.getMessage());
         }
         return 0L; // 默认返回 0
+    }
+
+    /**
+     * 从MinIO URL中提取objectName
+     * URL格式：http://localhost:9000/activities/posters/xxx.jpg
+     * 返回：posters/xxx.jpg
+     *
+     * @param url MinIO文件URL
+     * @return objectName，如果解析失败返回null
+     */
+    private String extractObjectNameFromUrl(String url) {
+        if (url == null || url.isEmpty()) {
+            return null;
+        }
+
+        try {
+            // URL格式：http://localhost:9000/bucketName/objectName
+            // 找到第三个"/"后的内容
+            int thirdSlashIndex = url.indexOf("/", url.indexOf("//") + 2);
+            if (thirdSlashIndex == -1) {
+                return null;
+            }
+
+            // 找到第四个"/"，即bucketName后的分隔符
+            int fourthSlashIndex = url.indexOf("/", thirdSlashIndex + 1);
+            if (fourthSlashIndex == -1) {
+                return null;
+            }
+
+            // 提取objectName
+            return url.substring(fourthSlashIndex + 1);
+        } catch (Exception e) {
+            log.error("从 URL 中提取 objectName 失败: url={}, error={}", url, e.getMessage());
+            return null;
+        }
     }
 }

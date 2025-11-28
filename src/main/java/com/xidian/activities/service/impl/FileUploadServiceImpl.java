@@ -96,7 +96,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                     .contentType(contentType)
                     .purpose(purpose)
                     .url(minioUtil.getFileUrl(bucketName, objectName))
-                    .temporaryUrl(minioUtil.getPresignedObjectUrl(bucketName, objectName, fileExpireHours))
                     .extension(fileExtension)
                     .uploadTime(System.currentTimeMillis())
                     .build();
@@ -130,7 +129,8 @@ public class FileUploadServiceImpl implements FileUploadService {
             // 根据fileId构建objectName (这里简化处理，实际需要存储映射关系)
             String objectName = fileId.startsWith("activity_cover_") ? "activity_cover/" + fileId : "general/" + fileId;
 
-            return minioUtil.getPresignedObjectUrl(bucketName, objectName, fileExpireHours);
+            // 返回公开永久URL
+            return minioUtil.getFileUrl(bucketName, objectName);
         } catch (Exception e) {
             log.error("获取文件URL失败: {}", e.getMessage(), e);
             throw BizException.of(ResultCodeEnum.INTERNAL_SERVER_ERROR, "获取文件访问链接失败");
@@ -193,7 +193,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                     .contentType(contentType)
                     .purpose(purpose)
                     .url(minioUtil.getFileUrl(bucketName, objectName))
-                    .temporaryUrl(minioUtil.getPresignedObjectUrl(bucketName, objectName, fileExpireHours))
                     .extension(fileExtension)
                     .uploadTime(System.currentTimeMillis())
                     .build();

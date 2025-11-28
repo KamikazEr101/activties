@@ -60,7 +60,7 @@ public class FileUploadController {
     }
 
     @GetMapping("/url/{fileId}")
-    @Operation(summary = "获取文件访问URL", description = "根据文件ID获取临时访问链接")
+    @Operation(summary = "获取文件访问URL", description = "根据文件ID获取永久访问链接")
     public Result<String> getFileUrl(
             @Parameter(description = "文件ID", required = true) @PathVariable String fileId) {
 

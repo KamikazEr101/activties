@@ -37,11 +37,8 @@ public class FileUploadResultDTO {
     @Schema(description = "文件用途", example = "activity_cover")
     private String purpose;
 
-    @Schema(description = "访问URL", example = "http://minio-server:9000/bucket/activity_cover_20231215_001.jpg")
+    @Schema(description = "访问URL（永久有效）", example = "http://localhost:9000/activities/posters/xxx.jpg")
     private String url;
-
-    @Schema(description = "临时访问链接（带过期时间）", example = "http://minio-server:9000/bucket/activity_cover_20231215_001.jpg?X-Amz-Security-Token=xxx")
-    private String temporaryUrl;
 
     @Schema(description = "文件扩展名", example = ".jpg")
     private String extension;
