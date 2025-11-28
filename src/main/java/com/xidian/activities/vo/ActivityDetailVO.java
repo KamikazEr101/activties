@@ -72,7 +72,7 @@ public class ActivityDetailVO {
     @Schema(description = "报名开始时间")
     private LocalDateTime registrationStartTime;
 
-    @Schema(description = "报名截止时间")
+    @Schema(description = "报名结束时间")
     private LocalDateTime registrationEndTime;
 
     @Schema(description = "创建者ID", example = "1")

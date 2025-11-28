@@ -535,6 +535,14 @@ public class ActivityServiceImpl implements ActivityService {
         Long viewCount = getViewCount(activity.getId());
         vo.setViewCount(viewCount);
 
+        if (activity.getRegistrationStartTime() != null) {
+            vo.setRegistrationStartTime(activity.getRegistrationStartTime());
+        }
+
+        if (activity.getRegistrationEndTime() != null) {
+            vo.setRegistrationEndTime(activity.getRegistrationEndTime());
+        }
+
         return vo;
     }
 
@@ -566,6 +574,14 @@ public class ActivityServiceImpl implements ActivityService {
                 && now.isAfter(activity.getRegistrationStartTime())
                 && now.isBefore(activity.getRegistrationEndTime());
         vo.setCanRegister(canRegister);
+
+        if (activity.getRegistrationStartTime() != null) {
+            vo.setRegistrationStartTime(activity.getRegistrationStartTime());
+        }
+
+        if (activity.getRegistrationEndTime() != null) {
+            vo.setRegistrationEndTime(activity.getRegistrationEndTime());
+        }
 
         return vo;
     }

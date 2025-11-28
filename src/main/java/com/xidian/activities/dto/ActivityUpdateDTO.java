@@ -31,6 +31,12 @@ public class ActivityUpdateDTO {
     @Schema(description = "活动类型编码", example = "ACADEMIC")
     private String activityType;
 
+    @Schema(description = "报名开始时间")
+    private LocalDateTime registrationStartTime;
+
+    @Schema(description = "报名结束时间")
+    private LocalDateTime registrationEndTime;  
+
     @Schema(description = "活动开始时间")
     private LocalDateTime startTime;
 
