@@ -554,36 +554,6 @@ public class ActivityServiceImpl implements ActivityService {
         }
     }
 
-    /**
-     * 根据当前时间和活动时间重新计算活动状态
-     */
-    private void recalculateActivityStatus(Activity activity) {
-        LocalDateTime now = LocalDateTime.now();
-
-        // 如果活动已取消或未发布，不重新计算
-        if (activity.getActivityStatus() == ActivityStatusEnum.UNRELEASED.getCode()
-                || activity.getActivityStatus() == ActivityStatusEnum.CANCELLED.getCode()) {
-            return;
-        }
-
-        int newStatus;
-        if (now.isAfter(activity.getEndTime())) {
-            newStatus = ActivityStatusEnum.ENDED.getCode(); // 已结束
-        } else if (now.isAfter(activity.getStartTime())) {
-            newStatus = ActivityStatusEnum.IN_PROGRESS.getCode(); // 进行中
-        } else if (now.isAfter(activity.getRegistrationEndTime())) {
-            newStatus = ActivityStatusEnum.REGISTRATION_ENDED.getCode(); // 报名结束
-        } else {
-            newStatus = ActivityStatusEnum.REGISTERING.getCode(); // 报名中
-        }
-
-        // 只有状态发生变化时才更新
-        if (activity.getActivityStatus() != newStatus) {
-            log.info("活动[{}]状态因时间变更自动调整: {} -> {}",
-                    activity.getId(), activity.getActivityStatus(), newStatus);
-            activity.setActivityStatus(newStatus);
-        }
-    }
 
     private ActivityDetailVO convertToDetailVO(Activity activity) {
         ActivityDetailVO vo = new ActivityDetailVO();
