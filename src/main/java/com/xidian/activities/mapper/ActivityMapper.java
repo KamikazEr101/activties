@@ -71,4 +71,6 @@ public interface ActivityMapper {
      * @return 活动列表
      */
     List<Activity> findActivitiesByStatus(@Param("activityStatus") Integer activityStatus);
+
+    void deleteById(@Param("id") Long id);
 }

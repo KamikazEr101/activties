@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 基础字段 -->
-    <sql id="Base_Column_List"> id, type_name, type_code, sort_order, is_enabled, create_time,
+    <sql id="Base_Column_List"> id, type_name, type_code, sort_order, is_enabled, create_time, is_deleted,
         update_time </sql>
 
     <!-- 插入活动类型 -->
@@ -37,19 +37,19 @@
 
     <!-- 根据ID查询活动类型 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap"> SELECT <include
-            refid="Base_Column_List" /> FROM activity_types WHERE id = #{id} AND is_enabled = 1 AND is_deleted = 0 </select>
+            refid="Base_Column_List" /> FROM activity_types WHERE id = #{id} AND is_deleted = 0 </select>
 
     <!-- 分页查询活动类型 -->
     <select id="selectList" parameterType="com.xidian.activities.entity.ActivityType"
         resultMap="BaseResultMap"> SELECT <include refid="Base_Column_List" /> FROM activity_types
-        WHERE is_enabled = 1 AND is_deleted = 0 <if test="typeName != null and typeName != ''"> AND type_name LIKE
+        WHERE is_deleted = 0 <if test="typeName != null and typeName != ''"> AND type_name LIKE
         CONCAT('%', #{typeName}, '%') </if>
         <if test="typeCode != null and typeCode != ''"> AND
         type_code = #{typeCode} </if> ORDER BY sort_order ASC, create_time ASC </select>
 
     <!-- 查询所有活动类型（按排序顺序排序） -->
     <select id="selectAll" resultMap="BaseResultMap"> SELECT <include refid="Base_Column_List" />
-        FROM activity_types WHERE is_enabled = 1 AND is_deleted = 0 ORDER BY sort_order ASC, create_time ASC </select>
+        FROM activity_types WHERE is_deleted = 0 ORDER BY sort_order ASC, create_time ASC </select>
 
     <!-- 检查类型名称是否存在 -->
     <select id="checkTypeNameExists" resultType="java.lang.Integer"> SELECT COUNT(*) FROM
@@ -66,14 +66,14 @@
     <!-- 根据类型编码查询 -->
     <select id="selectByTypeCode" parameterType="java.lang.String" resultMap="BaseResultMap"> SELECT <include
             refid="Base_Column_List" /> FROM activity_types WHERE type_code = #{typeCode} AND
-        is_enabled = 1 AND is_deleted = 0</select>
+         is_deleted = 0</select>
 
     <!-- 检查活动类型是否被使用 -->
     <select id="checkIsUsedByActivities" resultType="java.lang.Integer"> SELECT COUNT(*) FROM
         activities WHERE activity_type = ( SELECT type_code FROM activity_types WHERE id = #{typeId}
         ) AND is_deleted = 0 </select>
 
-    <delete id="deleteById" parameterType="java.lang.Long"> UPDATE activity_types SET is_deleted = 1 WHERE id =
-        #{id} </delete>
+    <update id="deleteById" parameterType="java.lang.Long"> UPDATE activity_types SET is_deleted = 1 WHERE id =
+        #{id} </update>
 
 </mapper>

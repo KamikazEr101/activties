@@ -180,7 +180,7 @@ public class ActivityServiceImpl implements ActivityService {
 
         activity.setIsDeleted(1);
         activity.setUpdateTime(LocalDateTime.now());
-        activityMapper.updateById(activity);
+        activityMapper.deleteById(activityId);
 
         // 如果活动有海报，删除MinIO中的文件
         if (activity.getPosterUrl() != null && !activity.getPosterUrl().isEmpty()) {
