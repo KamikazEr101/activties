@@ -31,11 +31,9 @@ public class ActivityUpdateDTO {
     @Schema(description = "活动类型编码", example = "ACADEMIC")
     private String activityType;
 
-    @Future(message = "活动开始时间必须是未来时间")
     @Schema(description = "活动开始时间")
     private LocalDateTime startTime;
 
-    @Future(message = "活动结束时间必须是未来时间")
     @Schema(description = "活动结束时间")
     private LocalDateTime endTime;
 

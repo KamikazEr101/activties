@@ -33,12 +33,10 @@ public class ActivityCreateDTO {
     private String activityType;
 
     @NotNull(message = "活动开始时间不能为空")
-    @Future(message = "活动开始时间必须是未来时间")
     @Schema(description = "活动开始时间", required = true)
     private LocalDateTime startTime;
 
     @NotNull(message = "活动结束时间不能为空")
-    @Future(message = "活动结束时间必须是未来时间")
     @Schema(description = "活动结束时间", required = true)
     private LocalDateTime endTime;
 
