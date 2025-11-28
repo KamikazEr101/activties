@@ -36,7 +36,7 @@
     <!-- 带活动信息的字段 -->
     <sql id="Registration_With_Activity_Columns"> r.id, r.activity_id, r.student_name,
         r.student_phone, r.student_college, r.registration_status, r.check_in_status,
-        r.check_in_time, r.is_deleted, r.create_time, r.update_time, a.activity_name, a.location,z
+        r.check_in_time, r.is_deleted, r.create_time, r.update_time, a.activity_name, a.location,
         a.start_time, a.end_time </sql>
 
     <!-- 插入报名记录 -->

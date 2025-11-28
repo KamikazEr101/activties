@@ -50,6 +50,7 @@ CREATE TABLE `activity_types` (
   `type_code` varchar(50) NOT NULL COMMENT '类型编码',
   `type_name` varchar(50) NOT NULL COMMENT '类型名称',
   `sort_order` int(11) NOT NULL DEFAULT '0' COMMENT '排序顺序',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '软删除标记',
   `is_enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用：0-禁用, 1-启用',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
