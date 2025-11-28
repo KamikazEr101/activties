@@ -76,4 +76,14 @@
     <delete id="deleteById" parameterType="java.lang.Long"> UPDATE activity_types SET is_deleted = 1 WHERE id =
         #{id} </delete>
 
+    <!-- 批量删除活动类型 -->
+    <update id="batchDelete">
+        UPDATE activity_types
+        SET is_deleted = 1
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>
