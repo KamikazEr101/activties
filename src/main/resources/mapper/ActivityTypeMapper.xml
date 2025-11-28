@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 基础字段 -->
-    <sql id="Base_Column_List"> id, type_name, type_code, sort_order, is_enabled, create_time,
+    <sql id="Base_Column_List"> id, type_name, type_code, sort_order, is_enabled, is_deleted, create_time,
         update_time </sql>
 
     <!-- 插入活动类型 -->
