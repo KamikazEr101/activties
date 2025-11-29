@@ -14,9 +14,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class MinioProperties {
 
     /**
-     * MinIO服务地址
+     * MinIO服务地址（后端内部访问）
      */
     private String endpoint;
+
+    /**
+     * MinIO外部访问地址（用于前端/移动端访问，如局域网IP）
+     * 如果不配置，则使用endpoint
+     */
+    private String externalEndpoint;
 
     /**
      * 访问密钥

@@ -27,6 +27,9 @@ public class MinioUtil {
     @Value("${minio.endpoint}")
     private String endpoint;
 
+    @Value("${minio.external-endpoint:}")
+    private String externalEndpoint;
+
     /**
      * 上传文件
      *
@@ -67,8 +70,28 @@ public class MinioUtil {
      * @return 公开URL
      */
     public String getFileUrl(String bucketName, String objectName) {
-        // 公开桶返回永久URL（无需预签名）
-        return endpoint + "/" + bucketName + "/" + objectName;
+        String baseUrl;
+
+        // 如果配置了外部访问地址，优先使用
+        if (externalEndpoint != null && !externalEndpoint.isEmpty() && !externalEndpoint.equals(endpoint)) {
+            baseUrl = externalEndpoint;
+            log.debug("使用配置的外部访问地址: {}", baseUrl);
+        } else {
+            // 未配置外部地址，自动检测本机IP
+            String localIp = NetworkUtil.getLocalIpAddress();
+            if (localIp != null && !localIp.isEmpty()) {
+                // 从endpoint中提取端口号
+                String port = NetworkUtil.extractPort(endpoint);
+                baseUrl = NetworkUtil.buildExternalUrl(localIp, port);
+                log.debug("自动检测到本机IP，使用外部访问地址: {}", baseUrl);
+            } else {
+                // 无法获取本机IP，使用配置的endpoint
+                baseUrl = endpoint;
+                log.debug("无法检测本机IP，使用内部访问地址: {}", baseUrl);
+            }
+        }
+
+        return baseUrl + "/" + bucketName + "/" + objectName;
     }
 
     /**
