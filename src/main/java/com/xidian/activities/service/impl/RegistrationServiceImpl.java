@@ -291,7 +291,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         String checkInToken = jwtUtil.generateCheckInToken(activityId);
 
         // 生成签到链接
-        String qrContent = baseUrl + "/h5/checkin?token=" + checkInToken;
+        String qrContent = baseUrl + "/h5/checkin/validate?token=" + checkInToken;
 
         // 生成二维码图片
         byte[] qrCodeBytes;
