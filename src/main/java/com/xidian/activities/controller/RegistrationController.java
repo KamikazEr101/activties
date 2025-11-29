@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -148,11 +149,12 @@ public class RegistrationController {
     @GetMapping("/student")
     @Operation(summary = "获取学生报名记录", description = "根据学生手机号获取报名记录")
     public Result<List<RegistrationVO>> getStudentRegistrationRecords(
-            @Parameter(description = "学生手机号", required = true) @RequestParam String studentPhone,
+            @Parameter(description = "学生手机号", required = true) @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确") @RequestParam String studentPhone,
             @Parameter(description = "学生姓名", required = true) @RequestParam String studentName) {
 
         log.info("获取学生报名记录请求: 手机号{}", studentPhone);
-        List<RegistrationVO> records = registrationService.getStudentRegistrationRecordsByPhoneAndName(studentPhone, studentName);
+        List<RegistrationVO> records = registrationService.getStudentRegistrationRecordsByPhoneAndName(studentPhone,
+                studentName);
         log.info("学生报名记录查询成功: 手机号{}, 记录数{}", studentPhone, records.size());
 
         return Result.ok(records);
