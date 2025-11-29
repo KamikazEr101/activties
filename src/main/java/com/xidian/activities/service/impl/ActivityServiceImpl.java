@@ -560,6 +560,11 @@ public class ActivityServiceImpl implements ActivityService {
         BeanUtils.copyProperties(activity, vo);
         vo.setActivityStatusName(ACTIVITY_STATUS_MAP.getOrDefault(activity.getActivityStatus(), "未知状态"));
 
+        // 替换posterUrl中的localhost为实际IP（用于移动端/局域网访问）
+        if (activity.getPosterUrl() != null && !activity.getPosterUrl().isEmpty()) {
+            vo.setPosterUrl(replacePosterUrl(activity.getPosterUrl()));
+        }
+
         ActivityType activityType = activityTypeMapper.selectByTypeCode(activity.getActivityType());
         if (activityType != null) {
             vo.setActivityTypeName(activityType.getTypeName());
@@ -755,5 +760,20 @@ public class ActivityServiceImpl implements ActivityService {
             log.error("从 URL 中提取 objectName 失败: url={}, error={}", url, e.getMessage());
             return null;
         }
+    }
+
+    private String replacePosterUrl(String originalUrl) {
+        if (originalUrl == null || originalUrl.isEmpty()) {
+            return originalUrl;
+        }
+        try {
+            String objectName = extractObjectNameFromUrl(originalUrl);
+            if (objectName != null) {
+                return minioUtil.getFileUrl(bucketName, objectName);
+            }
+        } catch (Exception e) {
+            log.warn("替换posterUrl失败，使用原始URL: url={}, error={}", originalUrl, e.getMessage());
+        }
+        return originalUrl;
     }
 }
