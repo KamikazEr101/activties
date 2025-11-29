@@ -612,6 +612,10 @@ public class ActivityServiceImpl implements ActivityService {
         vo.setActivityStatusName(ACTIVITY_STATUS_MAP.getOrDefault(activity.getActivityStatus(), "未知状态"));
 
         ActivityType activityType = activityTypeMapper.selectByTypeCode(activity.getActivityType());
+        // 替换posterUrl中的localhost为实际IP（用于移动端/局域网访问）
+        if (activity.getPosterUrl() != null && !activity.getPosterUrl().isEmpty()) {
+            vo.setPosterUrl(replacePosterUrl(activity.getPosterUrl()));
+        }
         if (activityType != null) {
             vo.setActivityTypeName(activityType.getTypeName());
         }
