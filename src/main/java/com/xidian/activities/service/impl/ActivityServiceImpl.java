@@ -388,6 +388,12 @@ public class ActivityServiceImpl implements ActivityService {
         // 活动发布前的完整性检查
         validateActivityCompleteness(activity);
 
+        LocalDateTime now = LocalDateTime.now();
+
+        if (!activity.getRegistrationStartTime().isAfter(now)) {
+            throw BizException.of(ResultCodeEnum.ACTIVITY_TIME_INVALID, "报名开始时间必须在当前时间之后");
+        }
+
         ActivityStatusUpdateDTO statusUpdateDTO = new ActivityStatusUpdateDTO();
         statusUpdateDTO.setActivityId(activityId);
         statusUpdateDTO.setActivityStatus(ActivityStatusEnum.REGISTERING.getCode()); // 报名中
