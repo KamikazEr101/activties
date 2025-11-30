@@ -28,6 +28,9 @@ public class FileUploadController {
     @Autowired
     private FileUploadService fileUploadService;
 
+    @Autowired
+    private com.xidian.activities.service.AIService aiService;
+
     @PostMapping("/upload")
     @Operation(summary = "上传文件", description = "上传单个文件到MinIO存储")
     public Result<FileUploadResultDTO> uploadFile(
@@ -99,6 +102,19 @@ public class FileUploadController {
 
         FileUploadResultDTO result = fileUploadService.uploadBase64(base64Data, fileName, purpose);
         log.info("Base64文件上传成功: 文件ID {}", result.getFileId());
+
+        return Result.ok(result);
+    }
+
+    @PostMapping("/ai/generate-poster")
+    @Operation(summary = "AI生成活动海报", description = "根据活动信息使用AI生成海报图片（返回Base64），前端可选择调用/file/upload/base64上传")
+    public Result<com.xidian.activities.dto.AIImageResultDTO> generateAIPoster(
+            @jakarta.validation.Valid @RequestBody com.xidian.activities.dto.AIPosterGenerateDTO generateDTO) {
+
+        log.info("AI生成海报请求: 活动名称={}", generateDTO.getActivityName());
+
+        com.xidian.activities.dto.AIImageResultDTO result = aiService.generateActivityPoster(generateDTO);
+        log.info("AI海报生成成功");
 
         return Result.ok(result);
     }
