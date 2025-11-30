@@ -20,8 +20,8 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
-                .setConnectTimeout(Duration.ofSeconds(30)) // 连接超时30秒
-                .setReadTimeout(Duration.ofSeconds(120)) // 读取超时120秒（AI生成需要时间）
+                .connectTimeout(Duration.ofSeconds(30)) // 连接超时30秒
+                .readTimeout(Duration.ofSeconds(120)) // 读取超时120秒（AI生成需要时间）
                 .build();
     }
 }
