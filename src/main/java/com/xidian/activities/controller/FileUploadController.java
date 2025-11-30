@@ -107,7 +107,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/ai/generate-poster")
-    @Operation(summary = "AI生成活动海报", description = "根据活动信息使用AI生成海报图片（返回Base64），前端可选择调用/file/upload/base64上传")
+    @Operation(summary = "AI生成活动海报", description = "根据活动信息使用AI生成海报图片并返回Base64")
     public Result<com.xidian.activities.dto.AIImageResultDTO> generateAIPoster(
             @jakarta.validation.Valid @RequestBody com.xidian.activities.dto.AIPosterGenerateDTO generateDTO) {
 
