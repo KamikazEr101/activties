@@ -1,6 +1,7 @@
 package com.xidian.activities.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class ActivityCreateDTO {
 
     @NotBlank(message = "活动名称不能为空")
     @Size(max = 100, message = "活动名称长度不能超过100字符")
-    @Schema(description = "活动名称", example = "新生计算机基础讲座", required = true)
+    @Schema(description = "活动名称", example = "新生计算机基础讲座", requiredMode = RequiredMode.REQUIRED)
     private String activityName;
 
     @Size(max = 2000, message = "活动描述长度不能超过2000字符")
@@ -26,35 +27,35 @@ public class ActivityCreateDTO {
     private String activityDescription;
 
     @NotBlank(message = "活动类型不能为空")
-    @Schema(description = "活动类型编码", example = "ACADEMIC", required = true)
+    @Schema(description = "活动类型编码", example = "ACADEMIC", requiredMode = RequiredMode.REQUIRED)
     private String activityType;
 
     @NotNull(message = "活动开始时间不能为空")
-    @Schema(description = "活动开始时间", required = true)
+    @Schema(description = "活动开始时间", requiredMode = RequiredMode.REQUIRED)
     private LocalDateTime startTime;
 
     @NotNull(message = "活动结束时间不能为空")
-    @Schema(description = "活动结束时间", required = true)
+    @Schema(description = "活动结束时间", requiredMode = RequiredMode.REQUIRED)
     private LocalDateTime endTime;
 
     @NotBlank(message = "活动地点不能为空")
     @Size(max = 200, message = "活动地点长度不能超过200字符")
-    @Schema(description = "活动地点", example = "学术报告厅A201", required = true)
+    @Schema(description = "活动地点", example = "学术报告厅A201", requiredMode = RequiredMode.REQUIRED)
     private String location;
 
     @NotBlank(message = "主办方不能为空")
     @Size(max = 100, message = "主办方长度不能超过100字符")
-    @Schema(description = "主办方", example = "计算机学院", required = true)
+    @Schema(description = "主办方", example = "计算机学院", requiredMode = RequiredMode.REQUIRED)
     private String organizer;
 
     @NotBlank(message = "负责人姓名不能为空")
     @Size(max = 50, message = "负责人姓名长度不能超过50字符")
-    @Schema(description = "负责人姓名", example = "王老师", required = true)
+    @Schema(description = "负责人姓名", example = "王老师", requiredMode = RequiredMode.REQUIRED)
     private String contactPerson;
 
     @NotBlank(message = "联系电话不能为空")
     @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
-    @Schema(description = "联系电话", example = "13812345678", required = true)
+    @Schema(description = "联系电话", example = "13812345678", requiredMode = RequiredMode.REQUIRED)
     private String contactPhone;
 
     @Min(value = 1, message = "最大参与人数必须大于0")
@@ -62,11 +63,11 @@ public class ActivityCreateDTO {
     private Integer maxParticipants;
 
     @NotNull(message = "报名开始时间不能为空")
-    @Schema(description = "报名开始时间", required = true)
+    @Schema(description = "报名开始时间", requiredMode = RequiredMode.REQUIRED)
     private LocalDateTime registrationStartTime;
 
     @NotNull(message = "报名截止时间不能为空")
-    @Schema(description = "报名截止时间", required = true)
+    @Schema(description = "报名截止时间", requiredMode = RequiredMode.REQUIRED)
     private LocalDateTime registrationEndTime;
 
     @Schema(description = "活动海报URL", example = "https://example.com/poster.jpg")

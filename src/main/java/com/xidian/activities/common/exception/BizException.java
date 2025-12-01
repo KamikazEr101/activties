@@ -58,13 +58,6 @@ public class BizException extends RuntimeException {
     /**
      * 静态工厂方法
      */
-    public static BizException of(String message) {
-        return new BizException(message);
-    }
-
-    public static BizException of(Integer code, String message) {
-        return new BizException(code, message);
-    }
 
     public static BizException of(ResultCodeEnum resultCodeEnum) {
         return new BizException(resultCodeEnum);

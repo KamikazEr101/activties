@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -91,32 +90,4 @@ public class H5Controller {
         return Result.ok(registrationVO);
     }
 
-    /**
-     * 签到页面配置信息
-     * 前端可以调用此接口获取页面展示所需的配置
-     *
-     * @return 配置信息
-     */
-    @GetMapping("/config")
-    @Operation(summary = "获取H5配置", description = "获取H5页面配置信息")
-    public Result<PageConfig> getPageConfig() {
-        PageConfig config = new PageConfig();
-        config.setAppName("高校学生活动管理系统");
-        config.setCheckInTitle("活动签到");
-        config.setPhonePlaceholder("请输入报名手机号");
-        config.setSubmitButtonText("立即签到");
-
-        return Result.ok(config);
-    }
-
-    /**
-     * H5页面配置
-     */
-    @Data
-    public static class PageConfig {
-        private String appName;
-        private String checkInTitle;
-        private String phonePlaceholder;
-        private String submitButtonText;
-    }
 }

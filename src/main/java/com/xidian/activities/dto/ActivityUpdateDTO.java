@@ -1,10 +1,10 @@
 package com.xidian.activities.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import java.time.LocalDateTime;
 
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Schema(description = "活动更新请求")
 public class ActivityUpdateDTO {
 
-    @Schema(description = "活动ID", example = "1", required = true)
+    @Schema(description = "活动ID", example = "1", requiredMode = RequiredMode.REQUIRED)
     private Long id;
 
     @Size(max = 100, message = "活动名称长度不能超过100字符")

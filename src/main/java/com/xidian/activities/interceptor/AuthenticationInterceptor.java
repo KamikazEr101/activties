@@ -31,6 +31,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
@@ -91,8 +92,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
-            throws Exception {
+    public void afterCompletion(@SuppressWarnings("NullableProblems") HttpServletRequest request, @SuppressWarnings("NullableProblems") HttpServletResponse response, @SuppressWarnings("NullableProblems") Object handler, Exception ex) {
         // 清除用户上下文
         LoginUserHolder.clear();
     }

@@ -27,7 +27,19 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                         "/admin/login", // 登录接口
                         "/public/**", // 公共接口
                         "/h5/**", // H5移动端签到页面（使用checkInToken验证）
-                        "/registration/**",
+
+                        // ===== 开放报名控制器中的所有非二维码生成接口 =====
+                        "/registration/register", // 开放：学生报名
+                        "/registration/cancel/*", // 开放：取消报名
+                        "/registration/checkin", // 开放：学生签到
+                        "/registration/checkin-by-token", // 开放：扫码签到
+                        // "/registration/batch-checkin", // 量签到
+                        "/registration/list", // 开放：查询报名列表
+                        "/registration/*", // 开放：获取报名详情
+                        "/registration/statistics/*", // 开放：获取报名统计
+                        "/registration/student", // 开放：获取学生报名记录
+                        // /registration/*/qrcode
+
                         "/doc.html", // Knife4j文档
                         "/swagger-ui.html", // Swagger UI首页
                         "/swagger-ui/**", // Swagger UI资源

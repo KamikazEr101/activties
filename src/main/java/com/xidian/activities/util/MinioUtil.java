@@ -21,9 +21,6 @@ public class MinioUtil {
     @Autowired
     private MinioClient minioClient;
 
-    @Value("${minio.bucket-name:activities}")
-    private String defaultBucketName;
-
     @Value("${minio.endpoint}")
     private String endpoint;
 
@@ -157,46 +154,6 @@ public class MinioUtil {
         } catch (Exception e) {
             log.error("创建存储桶失败: {}", e.getMessage(), e);
             throw new RuntimeException("创建存储桶失败: " + e.getMessage());
-        }
-    }
-
-    /**
-     * 下载文件
-     *
-     * @param bucketName 存储桶名称
-     * @param objectName 对象名称
-     * @return 文件流
-     */
-    public InputStream download(String bucketName, String objectName) {
-        try {
-            return minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(objectName)
-                            .build());
-        } catch (Exception e) {
-            log.error("下载文件失败: {}", e.getMessage(), e);
-            throw new RuntimeException("下载文件失败: " + e.getMessage());
-        }
-    }
-
-    /**
-     * 检查文件是否存在
-     *
-     * @param bucketName 存储桶名称
-     * @param objectName 对象名称
-     * @return 是否存在
-     */
-    public boolean objectExists(String bucketName, String objectName) {
-        try {
-            minioClient.statObject(
-                    StatObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(objectName)
-                            .build());
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 

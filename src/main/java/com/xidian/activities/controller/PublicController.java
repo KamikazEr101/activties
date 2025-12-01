@@ -1,10 +1,13 @@
 package com.xidian.activities.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.xidian.activities.common.exception.BizException;
 import com.xidian.activities.common.result.Result;
+import com.xidian.activities.common.result.ResultCodeEnum;
 import com.xidian.activities.dto.ActivityQueryDTO;
 import com.xidian.activities.service.ActivityService;
 import com.xidian.activities.service.ActivityTypeService;
+import com.xidian.activities.vo.ActivityDetailVO;
 import com.xidian.activities.vo.ActivityListVO;
 import com.xidian.activities.vo.ActivityTypeVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,8 +49,8 @@ public class PublicController {
             // 安全检查：不允许查询未发布(0)或已取消(5)的活动
             Integer status = queryDTO.getActivityStatus();
             if (status == 0 || status == 5) {
-                throw new com.xidian.activities.common.exception.BizException(
-                        com.xidian.activities.common.result.ResultCodeEnum.PARAM_ERROR,
+                throw new BizException(
+                        ResultCodeEnum.PARAM_ERROR,
                         "无法查询未发布或已取消的活动");
             }
         }
@@ -61,22 +64,22 @@ public class PublicController {
 
     @GetMapping("/activities/{activityId}")
     @Operation(summary = "公开活动详情", description = "获取活动详情信息（学生端，仅限已发布状态）")
-    public Result<com.xidian.activities.vo.ActivityDetailVO> getPublicActivityDetail(
+    public Result<ActivityDetailVO> getPublicActivityDetail(
             @Parameter(description = "活动ID", required = true) @PathVariable Long activityId) {
 
         log.info("公共获取活动详情: ID {}", activityId);
-        com.xidian.activities.vo.ActivityDetailVO activityVO = activityService.getActivityDetail(activityId);
+        ActivityDetailVO activityVO = activityService.getActivityDetail(activityId);
 
         // 学生端权限限制：只能查看已发布的活动（状态1-4，不包括0未发布和5已取消）
         // 这与管理员端（ActivityController）不同，管理员可以查看所有状态的活动
         if (activityVO.getActivityStatus() == 0) {
-            throw new com.xidian.activities.common.exception.BizException(
-                    com.xidian.activities.common.result.ResultCodeEnum.ACTIVITY_NOT_FOUND,
+            throw new BizException(
+                    ResultCodeEnum.ACTIVITY_NOT_FOUND,
                     "您访问的活动不存在或已下架");
         }
         if (activityVO.getActivityStatus() == 5) {
-            throw new com.xidian.activities.common.exception.BizException(
-                    com.xidian.activities.common.result.ResultCodeEnum.ACTIVITY_NOT_FOUND,
+            throw new BizException(
+                    ResultCodeEnum.ACTIVITY_NOT_FOUND,
                     "该活动已取消");
         }
 

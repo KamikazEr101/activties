@@ -241,9 +241,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 })
                 .collect(Collectors.toList());
 
-        PageInfo<RegistrationVO> pageInfo = new PageInfo<>(voList);
-
-        return pageInfo;
+        return new PageInfo<>(voList);
     }
 
     @Override

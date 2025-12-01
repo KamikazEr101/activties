@@ -1,6 +1,7 @@
 package com.xidian.activities.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -19,12 +20,12 @@ public class ActivityTypeUpdateDTO {
 
     @NotBlank(message = "类型名称不能为空")
     @Size(max = 50, message = "类型名称长度不能超过50个字符")
-    @Schema(description = "类型名称", example = "学术讲座", required = true)
+    @Schema(description = "类型名称", example = "学术讲座", requiredMode = RequiredMode.REQUIRED)
     private String typeName;
 
     @NotBlank(message = "类型编码不能为空")
     @Pattern(regexp = "^[A-Z_]{2,20}$", message = "类型编码只能包含大写字母和下划线，长度2-20位")
-    @Schema(description = "类型编码", example = "ACADEMIC_LECTURE", required = true)
+    @Schema(description = "类型编码", example = "ACADEMIC_LECTURE", requiredMode = RequiredMode.REQUIRED)
     private String typeCode;
 
     @Min(value = 0, message = "排序顺序不能为负数")

@@ -1,13 +1,14 @@
 package com.xidian.activities.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.Data;
 
 @Data
 @Schema(description = "AI海报生成请求")
 public class AIPosterGenerateDTO {
 
-    @Schema(description = "活动名称", required = true, example = "2024新生欢迎会")
+    @Schema(description = "活动名称", requiredMode = RequiredMode.REQUIRED, example = "2024新生欢迎会")
     private String activityName;
 
     @Schema(description = "活动描述", example = "欢迎2024级新生加入我们的大家庭")

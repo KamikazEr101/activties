@@ -1,7 +1,10 @@
 package com.xidian.activities.controller;
 
 import com.xidian.activities.common.result.Result;
+import com.xidian.activities.dto.AIImageResultDTO;
+import com.xidian.activities.dto.AIPosterGenerateDTO;
 import com.xidian.activities.dto.FileUploadResultDTO;
+import com.xidian.activities.service.AIService;
 import com.xidian.activities.service.FileUploadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +32,7 @@ public class FileUploadController {
     private FileUploadService fileUploadService;
 
     @Autowired
-    private com.xidian.activities.service.AIService aiService;
+    private AIService aiService;
 
     @PostMapping("/upload")
     @Operation(summary = "上传文件", description = "上传单个文件到MinIO存储")
@@ -108,12 +111,12 @@ public class FileUploadController {
 
     @PostMapping("/ai/generate-poster")
     @Operation(summary = "AI生成活动海报", description = "根据活动信息使用AI生成海报图片并返回Base64")
-    public Result<com.xidian.activities.dto.AIImageResultDTO> generateAIPoster(
-            @jakarta.validation.Valid @RequestBody com.xidian.activities.dto.AIPosterGenerateDTO generateDTO) {
+    public Result<AIImageResultDTO> generateAIPoster(
+            @jakarta.validation.Valid @RequestBody AIPosterGenerateDTO generateDTO) {
 
         log.info("AI生成海报请求: 活动名称={}", generateDTO.getActivityName());
 
-        com.xidian.activities.dto.AIImageResultDTO result = aiService.generateActivityPoster(generateDTO);
+        AIImageResultDTO result = aiService.generateActivityPoster(generateDTO);
         log.info("AI海报生成成功");
 
         return Result.ok(result);

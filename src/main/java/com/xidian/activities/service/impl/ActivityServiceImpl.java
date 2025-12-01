@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xidian.activities.common.enums.ActivityStatusEnum;
 import com.xidian.activities.common.exception.BizException;
+import com.xidian.activities.common.login.LoginUser;
 import com.xidian.activities.common.login.LoginUserHolder;
 import com.xidian.activities.common.result.ResultCodeEnum;
 import com.xidian.activities.dto.*;
@@ -15,6 +16,7 @@ import com.xidian.activities.entity.ActivityType;
 import com.xidian.activities.entity.Administrator;
 import com.xidian.activities.service.ActivityService;
 import com.xidian.activities.service.RedisService;
+import com.xidian.activities.util.MinioUtil;
 import com.xidian.activities.constant.CacheConstants;
 import com.xidian.activities.vo.ActivityDetailVO;
 import com.xidian.activities.vo.ActivityListVO;
@@ -54,7 +56,7 @@ public class ActivityServiceImpl implements ActivityService {
     private RedisService redisService;
 
     @Autowired
-    private com.xidian.activities.util.MinioUtil minioUtil;
+    private MinioUtil minioUtil;
 
     @Value("${minio.bucket-name:activities}")
     private String bucketName;
@@ -117,7 +119,7 @@ public class ActivityServiceImpl implements ActivityService {
         }
 
         // 检查权限：只有创建者或超级管理员可以修改
-        com.xidian.activities.common.login.LoginUser currentUser = LoginUserHolder.getLoginUser();
+        LoginUser currentUser = LoginUserHolder.getLoginUser();
         if (!activity.getCreatorId().equals(adminId) && currentUser.getRoleType() != 2) {
             throw BizException.of(ResultCodeEnum.ADMIN_ACCESS_FORBIDDEN);
         }
@@ -227,7 +229,7 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ACTIVITY_NOT_FOUND);
         }
 
-        com.xidian.activities.common.login.LoginUser currentUser = LoginUserHolder.getLoginUser();
+        LoginUser currentUser = LoginUserHolder.getLoginUser();
         if (!activity.getCreatorId().equals(adminId) && currentUser.getRoleType() != 2) {
             throw BizException.of(ResultCodeEnum.ADMIN_ACCESS_FORBIDDEN);
         }
@@ -280,7 +282,7 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ACTIVITY_NOT_FOUND);
         }
 
-        com.xidian.activities.common.login.LoginUser currentUser = LoginUserHolder.getLoginUser();
+        LoginUser currentUser = LoginUserHolder.getLoginUser();
         if (!activity.getCreatorId().equals(adminId) && currentUser.getRoleType() != 2) {
             throw BizException.of(ResultCodeEnum.ADMIN_ACCESS_FORBIDDEN);
         }
@@ -310,7 +312,7 @@ public class ActivityServiceImpl implements ActivityService {
         // 先从缓存获取
         try {
             Object cached = redisService.get(cacheKey);
-            if (cached != null && cached instanceof PageInfo) {
+            if (cached instanceof PageInfo) {
                 log.info("从缓存获取活动列表: cacheKey = {}", cacheKey);
                 return (PageInfo<ActivityListVO>) cached;
             }
@@ -345,7 +347,7 @@ public class ActivityServiceImpl implements ActivityService {
         String cacheKey = CacheConstants.ACTIVITY_CACHE + activityId;
         try {
             Object cached = redisService.get(cacheKey);
-            if (cached != null && cached instanceof ActivityDetailVO) {
+            if (cached instanceof ActivityDetailVO) {
                 log.info("从缓存获取活动详情: activityId = {}", activityId);
                 return (ActivityDetailVO) cached;
             }
@@ -518,7 +520,7 @@ public class ActivityServiceImpl implements ActivityService {
         }
 
         // 如果有错误信息，抛出异常
-        if (errorMsg.length() > 0) {
+        if (!errorMsg.isEmpty()) {
             // 移除最后的分号和空格
             String finalMsg = errorMsg.substring(0, errorMsg.length() - 2);
             throw BizException.of(ResultCodeEnum.ACTIVITY_INFO_INCOMPLETE, finalMsg);

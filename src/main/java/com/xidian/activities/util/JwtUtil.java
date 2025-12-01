@@ -2,6 +2,7 @@ package com.xidian.activities.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author KamikazEr101
  * @since 2025/11/20
  */
+@Getter
 @Slf4j
 @Component
 public class JwtUtil {
@@ -33,7 +35,7 @@ public class JwtUtil {
     /**
      * 生成JWT令牌
      *
-     * @param username 用户�?
+     * @param username 用户名?
      * @param adminId  管理员ID
      * @param roleType 角色类型
      * @return JWT令牌
@@ -51,7 +53,7 @@ public class JwtUtil {
      * 生成JWT令牌
      *
      * @param claims  声明
-     * @param subject 主题（用户名�?
+     * @param subject 主题（用户名）
      * @return JWT令牌
      */
     public String generateToken(Map<String, Object> claims, String subject) {
@@ -68,10 +70,10 @@ public class JwtUtil {
     }
 
     /**
-     * 从令牌中获取用户�?
+     * 从令牌中获取用户名?
      *
      * @param token JWT令牌
-     * @return 用户�?
+     * @return 用户名
      */
     public String getUsernameFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
@@ -127,7 +129,7 @@ public class JwtUtil {
      * 验证令牌是否有效
      *
      * @param token    JWT令牌
-     * @param username 用户�?
+     * @param username 用户名
      * @return 是否有效
      */
     public boolean validateToken(String token, String username) {
@@ -156,25 +158,6 @@ public class JwtUtil {
         }
     }
 
-    /**
-     * 刷新令牌
-     *
-     * @param token 原JWT令牌
-     * @return 新JWT令牌
-     */
-    public String refreshToken(String token) {
-        try {
-            Claims claims = getClaimsFromToken(token);
-            String username = claims.getSubject();
-            Long adminId = claims.get("adminId", Long.class);
-            Integer roleType = claims.get("roleType", Integer.class);
-
-            return generateToken(username, adminId, roleType);
-        } catch (JwtException | IllegalArgumentException e) {
-            log.error("JWT令牌刷新失败: {}", e.getMessage());
-            return null;
-        }
-    }
 
     /**
      * 获取签名密钥
@@ -186,23 +169,6 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /**
-     * 获取令牌�?
-     *
-     * @return 令牌�?
-     */
-    public String getTokenHead() {
-        return tokenHead;
-    }
-
-    /**
-     * 获取过期时间（秒）
-     *
-     * @return 过期时间
-     */
-    public Long getExpiration() {
-        return expiration;
-    }
 
     /**
      * 生成签到Token(30分钟有效期)
@@ -311,36 +277,35 @@ public class JwtUtil {
 
             // 保存到文件
             String fileName = "test-token.txt";
-            StringBuilder content = new StringBuilder();
-            content.append("=================================\n");
-            content.append("测试用永久Token（有效期100年）\n");
-            content.append("生成时间: ").append(now).append("\n");
-            content.append("=================================\n\n");
-            content.append("用户名: ").append(username).append("\n");
-            content.append("管理员ID: ").append(adminId).append("\n");
-            content.append("角色类型: ").append(roleType).append(" (2=超级管理员, 1=普通管理员)\n");
-            content.append("过期时间: ").append(expiryDate).append("\n\n");
-            content.append("完整Token:\n");
-            content.append(token).append("\n\n");
-            content.append("使用方式:\n");
-            content.append("【方式1 - Swagger UI】\n");
-            content.append("1. 访问 http://localhost:8080/swagger-ui.html\n");
-            content.append("2. 点击页面右上角的 [Authorize] 按钮\n");
-            content.append("3. 在弹出的对话框中输入: Bearer ").append(token).append("\n");
-            content.append("4. 点击 [Authorize] 按钮完成认证\n");
-            content.append("5. 现在可以直接在Swagger中测试所有需要认证的接口\n\n");
-            content.append("【方式2 - HTTP请求头】\n");
-            content.append("在请求头中添加: Authorization: Bearer ").append(token).append("\n\n");
-            content.append("【方式3 - Postman/Apifox】\n");
-            content.append("1. 在 Authorization 选项卡中选择 Bearer Token\n");
-            content.append("2. 将上面的完整Token粘贴到 Token 输入框中\n\n");
-            content.append("=================================\n");
-            content.append("注意: 此Token仅用于开发测试，请勿在生产环境使用！\n");
-            content.append("=================================\n");
+            String content = "=================================\n" +
+                    "测试用永久Token（有效期100年）\n" +
+                    "生成时间: " + now + "\n" +
+                    "=================================\n\n" +
+                    "用户名: " + username + "\n" +
+                    "管理员ID: " + adminId + "\n" +
+                    "角色类型: " + roleType + " (2=超级管理员, 1=普通管理员)\n" +
+                    "过期时间: " + expiryDate + "\n\n" +
+                    "完整Token:\n" +
+                    token + "\n\n" +
+                    "使用方式:\n" +
+                    "【方式1 - Swagger UI】\n" +
+                    "1. 访问 http://localhost:8080/swagger-ui.html\n" +
+                    "2. 点击页面右上角的 [Authorize] 按钮\n" +
+                    "3. 在弹出的对话框中输入: Bearer " + token + "\n" +
+                    "4. 点击 [Authorize] 按钮完成认证\n" +
+                    "5. 现在可以直接在Swagger中测试所有需要认证的接口\n\n" +
+                    "【方式2 - HTTP请求头】\n" +
+                    "在请求头中添加: Authorization: Bearer " + token + "\n\n" +
+                    "【方式3 - Postman/Apifox】\n" +
+                    "1. 在 Authorization 选项卡中选择 Bearer Token\n" +
+                    "2. 将上面的完整Token粘贴到 Token 输入框中\n\n" +
+                    "=================================\n" +
+                    "注意: 此Token仅用于开发测试，请勿在生产环境使用！\n" +
+                    "=================================\n";
 
-            java.nio.file.Files.write(
+            java.nio.file.Files.writeString(
                     java.nio.file.Paths.get(fileName),
-                    content.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                    content);
 
             System.out.println("\n✓ Token已保存到文件: " + new java.io.File(fileName).getAbsolutePath());
 

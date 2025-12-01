@@ -30,8 +30,6 @@ public class QRCodeUtil {
      * @param width   宽度
      * @param height  高度
      * @return 二维码图片字节数组
-     * @throws WriterException
-     * @throws IOException
      */
     public static byte[] generateQRCode(String content, int width, int height) throws WriterException, IOException {
         // 设置二维码参数
@@ -56,8 +54,6 @@ public class QRCodeUtil {
      *
      * @param content 二维码内容
      * @return 二维码图片字节数组
-     * @throws WriterException
-     * @throws IOException
      */
     public static byte[] generateQRCode(String content) throws WriterException, IOException {
         return generateQRCode(content, 300, 300);

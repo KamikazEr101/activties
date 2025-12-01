@@ -37,8 +37,6 @@ public class FileUploadServiceImpl implements FileUploadService {
     @Value("${minio.bucket-name:activities}")
     private String bucketName;
 
-    @Value("${minio.file-expire-hours:24}")
-    private Integer fileExpireHours;
 
     /**
      * 支持的图片类型

@@ -161,7 +161,7 @@ public class AIServiceImpl implements AIService {
         JsonNode responseNode = objectMapper.readTree(response.getBody());
         JsonNode imagesNode = responseNode.get("images");
 
-        if (imagesNode == null || !imagesNode.isArray() || imagesNode.size() == 0) {
+        if (imagesNode == null || !imagesNode.isArray() || imagesNode.isEmpty()) {
             throw new RuntimeException("API返回数据格式错误");
         }
 

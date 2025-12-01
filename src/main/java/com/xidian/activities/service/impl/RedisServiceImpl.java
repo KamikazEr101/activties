@@ -123,7 +123,7 @@ public class RedisServiceImpl implements RedisService {
     public Long deleteByPrefix(String prefix) {
         try {
             Set<String> keys = redisTemplate.keys(prefix + "*");
-            if (keys != null && !keys.isEmpty()) {
+            if (!keys.isEmpty()) {
                 Long result = redisTemplate.delete(keys);
                 log.debug("Redis根据前缀删除缓存: prefix = {}, count = {}", prefix, result);
                 return result;
@@ -162,7 +162,7 @@ public class RedisServiceImpl implements RedisService {
     public Map<Object, Object> hGetAll(String key) {
         try {
             Map<Object, Object> result = redisTemplate.opsForHash().entries(key);
-            log.debug("Redis Hash获取所有: key = {}, size = {}", key, result != null ? result.size() : 0);
+            log.debug("Redis Hash获取所有: key = {}, size = {}", key, result.size());
             return result;
         } catch (Exception e) {
             log.error("Redis Hash获取所有失败: key = {}, error = {}", key, e.getMessage());
