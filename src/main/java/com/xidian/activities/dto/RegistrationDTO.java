@@ -10,8 +10,8 @@ import jakarta.validation.constraints.Size;
 /**
  * 学生报名请求DTO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "学生报名请求")

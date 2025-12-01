@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * 报名Mapper接口
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Mapper
 public interface RegistrationMapper {
@@ -96,4 +96,4 @@ public interface RegistrationMapper {
 
         List<RegistrationVO> selectByPhoneAndName(@Param("studentPhone") String studentPhone,
                         @Param("studentName") String studentName);
-}       
+}

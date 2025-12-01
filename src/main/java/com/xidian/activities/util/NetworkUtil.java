@@ -9,8 +9,8 @@ import java.util.Enumeration;
 /**
  * 网络工具类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 public class NetworkUtil {

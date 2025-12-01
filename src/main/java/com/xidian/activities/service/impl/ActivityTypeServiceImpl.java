@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 /**
  * 活动类型服务实现类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @Service

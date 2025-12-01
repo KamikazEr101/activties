@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 /**
  * 签到二维码VO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @NoArgsConstructor

@@ -22,8 +22,8 @@ import java.util.Map;
 /**
  * AI服务实现类 - 使用硅基流动API
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @Service

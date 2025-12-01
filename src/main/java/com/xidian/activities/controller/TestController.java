@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
  * 测试控制器 - 用于验证异常处理
  * 仅在开发环境启用
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @RestController

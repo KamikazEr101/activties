@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 /**
  * 报名信息VO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Builder

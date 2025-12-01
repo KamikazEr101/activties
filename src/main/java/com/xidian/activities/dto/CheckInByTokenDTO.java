@@ -8,8 +8,8 @@ import lombok.Data;
 /**
  * 通过Token签到请求DTO(扫码签到)
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "扫码签到请求")

@@ -9,8 +9,8 @@ import lombok.AllArgsConstructor;
 /**
  * 报名统计VO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Builder

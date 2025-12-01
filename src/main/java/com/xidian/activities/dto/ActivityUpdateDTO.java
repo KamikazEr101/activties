@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 /**
  * 活动更新请求DTO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "活动更新请求")
@@ -36,7 +36,7 @@ public class ActivityUpdateDTO {
     private LocalDateTime registrationStartTime;
 
     @Schema(description = "报名结束时间")
-    private LocalDateTime registrationEndTime;  
+    private LocalDateTime registrationEndTime;
 
     @Schema(description = "活动开始时间")
     private LocalDateTime startTime;

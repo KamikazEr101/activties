@@ -18,8 +18,8 @@ import java.util.List;
  * 活动状态自动更新定时任务
  * 每分钟执行一次，自动更新活动状态
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @Component

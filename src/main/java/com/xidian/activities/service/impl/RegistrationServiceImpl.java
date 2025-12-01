@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 /**
  * 报名服务实现类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @Service

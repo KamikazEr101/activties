@@ -8,8 +8,8 @@ import jakarta.validation.constraints.Pattern;
 /**
  * 学生签到请求DTO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "学生签到请求")

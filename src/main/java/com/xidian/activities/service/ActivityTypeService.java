@@ -12,8 +12,8 @@ import java.util.List;
  * 活动类型服务接口
  * 注：使用手动缓存管理（RedisService），不使用Spring Cache注解
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 public interface ActivityTypeService {
 

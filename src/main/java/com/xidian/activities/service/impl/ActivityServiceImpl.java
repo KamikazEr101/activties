@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 /**
  * 活动服务实现类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @Service
@@ -559,7 +559,6 @@ public class ActivityServiceImpl implements ActivityService {
             throw BizException.of(ResultCodeEnum.ACTIVITY_STATUS_INVALID, "无效的活动状态");
         }
     }
-
 
     private ActivityDetailVO convertToDetailVO(Activity activity) {
         ActivityDetailVO vo = new ActivityDetailVO();

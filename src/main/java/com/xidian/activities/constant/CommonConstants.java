@@ -3,8 +3,8 @@ package com.xidian.activities.constant;
 /**
  * 通用常量类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 public class CommonConstants {
 
@@ -22,20 +22,20 @@ public class CommonConstants {
      * 活动状态常量
      */
     public static class ActivityStatus {
-        public static final Integer DRAFT = 0;        // 草稿
+        public static final Integer DRAFT = 0; // 草稿
         public static final Integer REGISTRATION = 1; // 报名中
         public static final Integer REGISTRATION_ENDED = 2; // 报名结束
-        public static final Integer IN_PROGRESS = 3;  // 进行中
-        public static final Integer ENDED = 4;        // 已结束
-        public static final Integer CANCELLED = 5;    // 已取消
+        public static final Integer IN_PROGRESS = 3; // 进行中
+        public static final Integer ENDED = 4; // 已结束
+        public static final Integer CANCELLED = 5; // 已取消
     }
 
     /**
      * 报名状态常量
      */
     public static class RegistrationStatus {
-        public static final Integer SUCCESS = 1;      // 报名成功
-        public static final Integer CANCELLED = 2;    // 已取消
+        public static final Integer SUCCESS = 1; // 报名成功
+        public static final Integer CANCELLED = 2; // 已取消
     }
 
     /**
@@ -43,23 +43,23 @@ public class CommonConstants {
      */
     public static class CheckInStatus {
         public static final Integer NOT_CHECKED_IN = 0; // 未签到
-        public static final Integer CHECKED_IN = 1;     // 已签到
+        public static final Integer CHECKED_IN = 1; // 已签到
     }
 
     /**
      * 管理员角色常量
      */
     public static class AdminRole {
-        public static final Integer SUPER_ADMIN = 1;  // 超级管理员
-        public static final Integer ADMIN = 2;        // 普通管理员
+        public static final Integer SUPER_ADMIN = 1; // 超级管理员
+        public static final Integer ADMIN = 2; // 普通管理员
     }
 
     /**
      * 管理员账户状态常量
      */
     public static class AdminAccountStatus {
-        public static final Integer NORMAL = 0;    // 正常
-        public static final Integer DISABLED = 1;  // 禁用
+        public static final Integer NORMAL = 0; // 正常
+        public static final Integer DISABLED = 1; // 禁用
     }
 
     /**
@@ -123,13 +123,15 @@ public class CommonConstants {
      */
     public static class ActivityStatusFlow {
         // 草稿状态可以流转到
-        public static final Integer[] FROM_DRAFT = {ActivityStatus.REGISTRATION, ActivityStatus.CANCELLED};
+        public static final Integer[] FROM_DRAFT = { ActivityStatus.REGISTRATION, ActivityStatus.CANCELLED };
         // 报名中状态可以流转到
-        public static final Integer[] FROM_REGISTRATION = {ActivityStatus.REGISTRATION_ENDED, ActivityStatus.IN_PROGRESS, ActivityStatus.CANCELLED};
+        public static final Integer[] FROM_REGISTRATION = { ActivityStatus.REGISTRATION_ENDED,
+                ActivityStatus.IN_PROGRESS, ActivityStatus.CANCELLED };
         // 报名结束状态可以流转到
-        public static final Integer[] FROM_REGISTRATION_ENDED = {ActivityStatus.IN_PROGRESS, ActivityStatus.CANCELLED};
+        public static final Integer[] FROM_REGISTRATION_ENDED = { ActivityStatus.IN_PROGRESS,
+                ActivityStatus.CANCELLED };
         // 进行中状态可以流转到
-        public static final Integer[] FROM_IN_PROGRESS = {ActivityStatus.ENDED, ActivityStatus.CANCELLED};
+        public static final Integer[] FROM_IN_PROGRESS = { ActivityStatus.ENDED, ActivityStatus.CANCELLED };
         // 已结束状态为最终状态，不能流转
         // 已取消状态为最终状态，不能流转
     }

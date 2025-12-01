@@ -11,8 +11,8 @@ import java.time.Duration;
  * RestTemplate配置
  * 用于HTTP客户端请求（如调用AI API）
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Configuration
 public class RestTemplateConfig {

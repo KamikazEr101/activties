@@ -17,8 +17,8 @@ import java.util.List;
 /**
  * 全局异常处理器
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @RestControllerAdvice

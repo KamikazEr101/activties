@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 /**
  * 报名记录实体类 (registrations)
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 public class Registration {

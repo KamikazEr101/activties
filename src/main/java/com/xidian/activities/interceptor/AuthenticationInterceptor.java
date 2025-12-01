@@ -19,8 +19,8 @@ import java.io.IOException;
  * 认证拦截器
  * 用于验证JWT令牌和设置用户上下文
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @Component

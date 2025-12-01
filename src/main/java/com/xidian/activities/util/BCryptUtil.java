@@ -5,8 +5,8 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 /**
  * BCrypt加密工具类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 public class BCryptUtil {
 

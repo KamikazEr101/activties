@@ -3,8 +3,8 @@ package com.xidian.activities.constant;
 /**
  * 缓存常量
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 public interface CacheConstants {
 

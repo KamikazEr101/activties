@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * MinIO配置类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Configuration
 @EnableConfigurationProperties(MinioProperties.class)

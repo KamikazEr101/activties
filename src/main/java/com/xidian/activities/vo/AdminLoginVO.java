@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 /**
  * 管理员登录响应VO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Builder

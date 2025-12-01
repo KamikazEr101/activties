@@ -4,8 +4,8 @@ package com.xidian.activities.common.login;
  * 登录用户上下文持有者
  * 用于存储当前线程的登录用户信息
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 public class LoginUserHolder {
     private static ThreadLocal<LoginUser> threadLocal = new ThreadLocal<>();

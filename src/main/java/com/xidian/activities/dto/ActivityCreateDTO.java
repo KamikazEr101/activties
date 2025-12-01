@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 /**
  * 活动创建请求DTO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "活动创建请求")

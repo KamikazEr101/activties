@@ -19,8 +19,8 @@ import java.util.List;
 /**
  * 公共控制器 - 无需认证的接口
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @RestController

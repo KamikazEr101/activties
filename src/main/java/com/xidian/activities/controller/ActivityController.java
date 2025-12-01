@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 活动控制器
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @RestController

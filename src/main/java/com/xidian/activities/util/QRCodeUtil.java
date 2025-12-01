@@ -17,8 +17,8 @@ import java.util.Map;
 /**
  * 二维码工具类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 public class QRCodeUtil {

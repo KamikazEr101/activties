@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Redis服务接口
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 public interface RedisService {
 
@@ -147,7 +147,7 @@ public interface RedisService {
     /**
      * Set设置
      *
-     * @param key   键
+     * @param key    键
      * @param values 值集合
      * @return 添加的数量
      */

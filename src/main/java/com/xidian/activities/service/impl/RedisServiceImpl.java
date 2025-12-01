@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Redis服务实现类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @Service
@@ -198,7 +198,8 @@ public class RedisServiceImpl implements RedisService {
     public List<Object> lRange(String key, long start, long end) {
         try {
             List<Object> result = redisTemplate.opsForList().range(key, start, end);
-            log.debug("Redis List获取: key = {}, range = {}-{}, size = {}", key, start, end, result != null ? result.size() : 0);
+            log.debug("Redis List获取: key = {}, range = {}-{}, size = {}", key, start, end,
+                    result != null ? result.size() : 0);
             return result;
         } catch (Exception e) {
             log.error("Redis List获取失败: key = {}, error = {}", key, e.getMessage());

@@ -66,8 +66,9 @@ springdoc:
     path: /v3/api-docs
   packages-to-scan: com.xidian.activities.controller
 
+# AI生图配置，使用硅基流动API
 ai:
   siliconflow:
     api-key: YOUR_API_KEY_HERE  # 在 https://cloud.siliconflow.cn/ 获取
     api-url: https://api.siliconflow.cn/v1/images/generations
-    model: black-forest-labs/FLUX.1-schnell
+    model: Kwai-Kolors/Kolors

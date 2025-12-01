@@ -13,35 +13,35 @@ import org.springframework.context.annotation.Configuration;
 /**
  * OpenAPI (Swagger) 配置类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Configuration
 public class OpenApiConfiguration {
 
-    private static final String SECURITY_SCHEME_NAME = "Bearer Authentication";
+        private static final String SECURITY_SCHEME_NAME = "Bearer Authentication";
 
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("校园活动管理系统 API")
-                        .description("校园活动管理系统接口文档")
-                        .version("1.0.0")
-                        .contact(new Contact()
-                                .name("开发团队")
-                                .email("example@xidian.edu.cn"))
-                        .license(new License()
-                                .name("Apache 2.0")
-                                .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
-                .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
-                .components(new Components()
-                        .addSecuritySchemes(SECURITY_SCHEME_NAME,
-                                new SecurityScheme()
-                                        .name(SECURITY_SCHEME_NAME)
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
-                                        .bearerFormat("JWT")
-                                        .description("请输入JWT Token，格式：直接输入token即可（不需要Bearer前缀）")));
-    }
+        @Bean
+        public OpenAPI customOpenAPI() {
+                return new OpenAPI()
+                                .info(new Info()
+                                                .title("校园活动管理系统 API")
+                                                .description("校园活动管理系统接口文档")
+                                                .version("1.0.0")
+                                                .contact(new Contact()
+                                                                .name("开发团队")
+                                                                .email("example@xidian.edu.cn"))
+                                                .license(new License()
+                                                                .name("Apache 2.0")
+                                                                .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
+                                .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
+                                .components(new Components()
+                                                .addSecuritySchemes(SECURITY_SCHEME_NAME,
+                                                                new SecurityScheme()
+                                                                                .name(SECURITY_SCHEME_NAME)
+                                                                                .type(SecurityScheme.Type.HTTP)
+                                                                                .scheme("bearer")
+                                                                                .bearerFormat("JWT")
+                                                                                .description("请输入JWT Token，格式：直接输入token即可（不需要Bearer前缀）")));
+        }
 }

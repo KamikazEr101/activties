@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 /**
  * 通用工具类
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 public class CommonUtils {
@@ -25,8 +25,7 @@ public class CommonUtils {
      * 邮箱正则表达式
      */
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-    );
+            "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
     /**
      * 日期时间格式化器
@@ -122,7 +121,7 @@ public class CommonUtils {
     /**
      * 安全地将字符串转换为整数
      *
-     * @param str 字符串
+     * @param str          字符串
      * @param defaultValue 默认值
      * @return 整数
      */
@@ -141,7 +140,7 @@ public class CommonUtils {
     /**
      * 安全地将字符串转换为长整数
      *
-     * @param str 字符串
+     * @param str          字符串
      * @param defaultValue 默认值
      * @return 长整数
      */
@@ -161,7 +160,7 @@ public class CommonUtils {
      * 生成文件名
      *
      * @param originalName 原始文件名
-     * @param prefix 前缀
+     * @param prefix       前缀
      * @return 生成的文件名
      */
     public static String generateFileName(String originalName, String prefix) {

@@ -9,8 +9,8 @@ import jakarta.validation.constraints.Size;
 /**
  * 管理员登录请求DTO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "管理员登录请求")

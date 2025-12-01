@@ -9,8 +9,8 @@ import com.xidian.activities.vo.*;
 /**
  * 报名服务接口
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 public interface RegistrationService {
 
@@ -135,7 +135,7 @@ public interface RegistrationService {
      * 根据手机号和姓名获取学生报名记录
      *
      * @param studentPhone 学生手机号
-     * @param studentName 学生姓名
+     * @param studentName  学生姓名
      * @return 报名记录列表
      */
     List<RegistrationVO> getStudentRegistrationRecordsByPhoneAndName(String studentPhone, String studentName);

@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 /**
  * 活动实体类 (activities)
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 public class Activity {

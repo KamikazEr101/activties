@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * 活动类型Mapper接口
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Mapper
 public interface ActivityTypeMapper {

@@ -22,8 +22,8 @@ import java.util.Map;
  * H5/移动端接口控制器
  * 用于处理扫码签到等移动端请求(前后端分离)
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Slf4j
 @RestController

@@ -9,8 +9,8 @@ import jakarta.validation.constraints.Max;
 /**
  * 活动状态更新请求DTO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "活动状态更新请求")

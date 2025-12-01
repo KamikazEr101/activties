@@ -11,8 +11,8 @@ import jakarta.validation.constraints.Min;
 /**
  * 创建活动类型DTO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "创建活动类型请求")

@@ -10,8 +10,8 @@ import jakarta.validation.constraints.Min;
 /**
  * 更新活动类型DTO
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 @Schema(description = "更新活动类型请求")

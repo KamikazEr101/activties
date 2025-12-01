@@ -7,8 +7,8 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 管理员Mapper接口
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Mapper
 public interface AdministratorMapper {

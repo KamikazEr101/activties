@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 /**
  * 管理员实体类 (administrators)
  *
- * @author
- * @since
+ * @author KamikazEr101
+ * @since 2025/11/20
  */
 @Data
 public class Administrator {
